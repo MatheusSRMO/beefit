@@ -1,29 +1,35 @@
 import Button from '@/components/button';
+import { StatusBar } from 'expo-status-bar';
+import { MailIcon } from 'lucide-react';
 import React from 'react'
 import { Text, View, Image, TextInput } from 'react-native'
-
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 
 
 export default function Home() {
-    const [username, setUsername] = React.useState("");
-    const [password, setPassword] = React.useState("");
+    const router = useRouter();
+
+
     return (
-        <View className="flex-1 bg-background-primary items-center justify-center">
-            <Image 
-                source={require('../../../assets/images/bg.png')} 
-                className='absolute top-0 right-0 w-1/2 h-1/2 -z-10'
-            />
-            <Image 
-                source={require('../../../assets/images/abelha1.png')} 
-                className=''
-            />
 
-            <Text className="text-text-primary font-bold text-6xl">LuFit</Text>
-
-            <View>
-                <Button title="Login" onPress={() => console.log('login')} />
+        <>
+            <View className='w-full flex items-center'>
+                <Button
+                    icon={null}
+                    title="Entrar com Email"
+                    onPress={() => {
+                        router.push('/profile')
+                    }}
+                    className='bg-[#528AA5] w-9/12'
+                />
             </View>
+            {/* muda a status bar */}
+            <StatusBar style="light" backgroundColor='#080835' />
+        </>
 
-        </View>
+
+
+
     )
 }
