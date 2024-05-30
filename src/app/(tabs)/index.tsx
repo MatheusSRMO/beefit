@@ -32,7 +32,7 @@ export default function Home() {
                     title="Login"
                     className='bg-[#528AA5] w-9/12'
                     onPress={() => {
-                        router.push('/sign-in')
+                        router.push('/signIn')
                     }}
                 />
             </View>
