@@ -1,8 +1,6 @@
 import Button from '@/components/button';
-import clsx from 'clsx';
-import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Dimensions, Animated, ImageBackground, Image } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Animated, ImageBackground, Image } from 'react-native';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = 280;
@@ -20,7 +18,6 @@ export default function Training() {
 
   return (
     <View className='flex-1 items-center justify-center'>
-      <StatusBar style="light" backgroundColor='#080835' />
 
       <Image source={require('@/assets/images/loginBg.png')} className='absolute -top-20 left-0 w-full ' resizeMode='stretch'  />
 

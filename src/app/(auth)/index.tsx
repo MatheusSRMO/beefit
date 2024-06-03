@@ -1,7 +1,6 @@
 import { View, ScrollView, Image } from 'react-native';
 import React from 'react';
 import Calendar from '@/components/calendar';
-import { StatusBar } from 'expo-status-bar';
 import ProgressOverview from '@/components/progressOverview';
 import ProfileHeader from '@/components/profileHeader';
 import { useRouter } from 'expo-router';
@@ -10,7 +9,6 @@ export default function Main() {
   const router = useRouter();
   return (
     <View className='w-full h-full flex justify-center items-center pt-20'>
-      <StatusBar style="light" backgroundColor='#080835' />
 
       <ProfileHeader name='Matheus Souza Ribeiro' imageSource='https://github.com/MatheusSRMO.png' />
 
