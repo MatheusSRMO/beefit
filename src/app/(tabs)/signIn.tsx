@@ -74,8 +74,8 @@ export default function SignIn() {
       }}>Oi Aluno </Animated.Text>
 
       <Animated.View className='w-full flex items-center justify-center gap-5' style={{ top: textTop }}>
-        <TextInput data={username} setData={setUsername} placeholder='Usuário' type='default' />
-        <TextInput data={password} setData={setPassword} placeholder='Senha' type='visible-password' />
+        <TextInput value={username} setValue={setUsername} placeholder='Usuário' type='default' />
+        <TextInput value={password} setValue={setPassword} placeholder='Senha' type='visible-password' />
         
         <Button title='Entrar' className='bg-[#528AA5] w-6/12 mt-10 rounded-full py-2' onPress={() => {
           router.push('/main')

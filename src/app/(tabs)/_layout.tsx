@@ -2,12 +2,47 @@ import "@/styles/global.css";
 import { Slot } from "expo-router";
 import { SafeAreaView } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
+import {
+  useFonts,
+  Roboto_100Thin,
+  Roboto_100Thin_Italic,
+  Roboto_300Light,
+  Roboto_300Light_Italic,
+  Roboto_400Regular,
+  Roboto_400Regular_Italic,
+  Roboto_500Medium,
+  Roboto_500Medium_Italic,
+  Roboto_700Bold,
+  Roboto_700Bold_Italic,
+  Roboto_900Black,
+  Roboto_900Black_Italic,
+} from '@expo-google-fonts/roboto';
+import Loading from "@/components/loading";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 export default function Layout({ children }: LayoutProps) {
+  const [fontsLoaded] = useFonts({
+    Roboto_100Thin,
+    Roboto_100Thin_Italic,
+    Roboto_300Light,
+    Roboto_300Light_Italic,
+    Roboto_400Regular,
+    Roboto_400Regular_Italic,
+    Roboto_500Medium,
+    Roboto_500Medium_Italic,
+    Roboto_700Bold,
+    Roboto_700Bold_Italic,
+    Roboto_900Black,
+    Roboto_900Black_Italic,
+  });
+
+  if (!fontsLoaded) {
+    return <Loading />;
+  }
+
   return (
     <SafeAreaView style={{ backgroundColor: '#080835' }} className="items-center justify-center w-full h-screen" >
       {children}
