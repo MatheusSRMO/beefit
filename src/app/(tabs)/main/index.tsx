@@ -4,8 +4,10 @@ import Calendar from '@/components/calendar';
 import { StatusBar } from 'expo-status-bar';
 import ProgressOverview from '@/components/progressOverview';
 import ProfileHeader from '@/components/profileHeader';
+import { useRouter } from 'expo-router';
 
 export default function Main() {
+  const router = useRouter();
   return (
     <View className='w-full h-full flex justify-center items-center pt-20'>
       <StatusBar style="light" backgroundColor='#080835' />
@@ -25,13 +27,19 @@ export default function Main() {
             flexGrow: 1,
             justifyContent: 'center',
             alignItems: 'center',
-            borderRadius: 50,
           }}
         >
           {/* Aqui colocamos o componente Calendar */}
-          <Calendar />
+          <Calendar onDayPress={(day: { dateString: string; }) => {
+            router.push({
+              pathname: './training',
+              params: {
+                date: day.dateString,
+              },
+            });
+          }}/>
 
-          <ProgressOverview progress={0.3} />
+          <ProgressOverview progress={0.8} />
           <ProgressOverview progress={0.1} />
           <ProgressOverview progress={0.2} />
           <ProgressOverview progress={0.3} />
