@@ -56,13 +56,17 @@ LocaleConfig.locales['pt-br'] = {
 LocaleConfig.defaultLocale = 'pt-br';
 
 
-export default function Calendar() {
+interface CalendarProps {
+  onDayPress: (day: { dateString: string; }) => void;
+}
+
+export default function Calendar({ onDayPress }: CalendarProps) {
   const [selectedDate, setSelectedDate] = useState(['']);
 
-  const onDayPress = (day: { dateString: string; }) => {
-    // Aqui é onde você vai fazer o que quiser com a data selecionada, tu vai puxar as datas da api e colocar no array selectedDate 🙂
-    setSelectedDate(prev => [...prev, day.dateString]);
-  };
+  // const onDayPress = (day: { dateString: string; }) => {
+  //   // Aqui é onde você vai fazer o que quiser com a data selecionada, tu vai puxar as datas da api e colocar no array selectedDate 🙂
+  //   setSelectedDate(prev => [...prev, day.dateString]);
+  // };
 
   return (
     <RNCalendar
