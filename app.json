@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#192C64"
-      }
+      },
+      "package": "com.matheus.srmo.beefit"
     },
     "web": {
       "bundler": "metro",
@@ -35,6 +36,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "cbeec5a4-3bd7-4090-809c-681b33a1f43f"
+      }
     }
   }
 }

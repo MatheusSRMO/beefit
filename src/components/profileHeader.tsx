@@ -1,5 +1,6 @@
 import { View, Text } from 'react-native'
 import React from 'react'
+import Avatar from './avatar'
 
 interface ProfileHeaderProps {
   name: string,
@@ -14,9 +15,9 @@ export default function ProfileHeader({ name, imageSource }: ProfileHeaderProps)
           {name}
         </Text>
       </View>
-      <View className="bg-black rounded-full w-32 h-32 flex items-center justify-center">
-        <Text className="text-white">{imageSource}</Text>
-      </View>
+      <Avatar source={{
+        uri: imageSource
+      }} />
     </View>
   )
 }

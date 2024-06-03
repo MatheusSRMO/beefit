@@ -8,23 +8,24 @@ import ProfileHeader from '@/components/profileHeader';
 export default function Main() {
   return (
     <View className='w-full h-full flex justify-center items-center pt-20'>
-      <StatusBar style="light" backgroundColor='#192C64' />
+      <StatusBar style="light" backgroundColor='#080835' />
 
-      <ProfileHeader name='Matheus Souza Ribeiro' imageSource='Avatar' />
+      <ProfileHeader name='Matheus Souza Ribeiro' imageSource='https://github.com/MatheusSRMO.png' />
 
       <View className="flex my-10 py-10 w-[90%] h-[90%] rounded-3xl">
         <Image
           source={require('@/assets/images/bg-main.png')}
+          resizeMode='stretch'
           className='absolute w-full h-[105%] top-0 left-0 right-0 bottom-0 rounded-3xl'
-          style={{ resizeMode: 'stretch' }}
         />
 
         <ScrollView
-          className='w-full h-full mb-10'
+          className='w-full h-full mb-10 rounded-3xl'
           contentContainerStyle={{
             flexGrow: 1,
             justifyContent: 'center',
             alignItems: 'center',
+            borderRadius: 50,
           }}
         >
           {/* Aqui colocamos o componente Calendar */}

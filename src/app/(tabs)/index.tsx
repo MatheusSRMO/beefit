@@ -7,11 +7,11 @@ import HelpButton from '@/components/helpButton';
 
 export default function Home() {
   const router = useRouter();
-  
+
   return (
     <ImageBackground source={require('@/assets/images/hive_background.png')} className='w-full h-full flex items-center justify-around'>
       {/* muda a status bar */}
-      <StatusBar style="light" backgroundColor='#192C64' />
+      <StatusBar style="light" backgroundColor='#080835' />
 
       <Image
         source={require("@/assets/images/beefit_logo.png")}
@@ -24,7 +24,7 @@ export default function Home() {
           title="Login"
           className='bg-[#528AA5] w-9/12'
           onPress={() => {
-            router.push('/signIn')
+            router.push('/(auth)/signIn')
           }}
         />
       </View>

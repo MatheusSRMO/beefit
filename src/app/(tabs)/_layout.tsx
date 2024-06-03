@@ -17,13 +17,9 @@ import {
   Roboto_900Black,
   Roboto_900Black_Italic,
 } from '@expo-google-fonts/roboto';
-import Loading from "@/components/loading";
+import Loading from "./loading";
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
-
-export default function Layout({ children }: LayoutProps) {
+export default function Layout() {
   const [fontsLoaded] = useFonts({
     Roboto_100Thin,
     Roboto_100Thin_Italic,
@@ -45,9 +41,8 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <SafeAreaView style={{ backgroundColor: '#080835' }} className="items-center justify-center w-full h-screen" >
-      {children}
       <Slot />
-      <LinearGradient
+      {/* <LinearGradient
         // Background Linear Gradient on diagonal
         colors={['#192C64', '#080835']}
         start={{ x: 0, y: 0 }}
@@ -60,7 +55,7 @@ export default function Layout({ children }: LayoutProps) {
           height: '100%',
           zIndex: -1
         }}
-      />
+      /> */}
 
     </SafeAreaView>
   );

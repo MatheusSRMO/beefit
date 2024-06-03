@@ -67,7 +67,7 @@ export default function SignIn() {
         resizeMode: 'stretch',
         top: imageTop
       }} />
-      <StatusBar style="light" backgroundColor='#192C64' />
+      <StatusBar style="light" backgroundColor='#141440' />
 
       <Animated.Text className='absolute text-[#FFDC98] text-4xl' style={{
         top: textTop
