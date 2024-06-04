@@ -7,6 +7,7 @@
     "icon": "./src/assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "backgroundColor": "#080835",
     "splash": {
       "image": "./src/assets/images/beefit_logo.png",
       "resizeMode": "contain",
