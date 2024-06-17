@@ -10,6 +10,10 @@ export default function Avatar({ size = 'large', ...rest }: AvatarProps) {
   return (
     <Image
       {...rest}
+      style={{
+        borderWidth: 5, 
+        borderColor: '#4F99DD',
+      }}
       className={clsx('rounded-full', {
         'w-10 h-10': size === 'small',
         'w-20 h-20': size === 'medium',

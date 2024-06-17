@@ -25,7 +25,7 @@ export default function TextInput({ value, setValue, type, placeholder, classNam
         value={value}
         onChangeText={setValue}
         placeholder={placeholder}
-        className={cn('bg-[#21175C] text-[#FFDC98] text-xl px-10 py-3 rounded-3xl placeholder:text-[#FFDC98]', className)}
+        className={cn('bg-[#192C64] text-[#FFFFFF] px-5 py-2 rounded-2xl placeholder:text-[#FFFFFF]', className)}
         keyboardType={type === 'password' ? 'default' : type}
         secureTextEntry={type === 'password' && !isPasswordVisible}
       />
@@ -34,7 +34,7 @@ export default function TextInput({ value, setValue, type, placeholder, classNam
           onPress={togglePasswordVisibility}
           className='absolute right-5 top-1/2 transform -translate-y-1/2'
         >
-          <MaterialIcons name={isPasswordVisible ? 'visibility-off' : 'visibility'} size={24} color='#FFDC98' />
+          <MaterialIcons name={isPasswordVisible ? 'visibility-off' : 'visibility'} size={24} color='#FFFFFF' />
         </TouchableOpacity>
       )}
     </View>

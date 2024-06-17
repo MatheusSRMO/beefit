@@ -5,7 +5,7 @@ import { StatusBar } from 'expo-status-bar'
 
 export default function Loading() {
   return (
-    <View className='w-full h-full bg-[#528AA5]'>
+    <View className='w-full h-full bg-[#006895]'>
       <StatusBar style="light" backgroundColor='#528AA5' />
       <LoadingC />
     </View>

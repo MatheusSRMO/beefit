@@ -76,12 +76,12 @@ export default function Calendar({ onDayPress }: CalendarProps) {
         ...selectedDate.reduce((acc, date) => ({ ...acc, [date]: { selected: true, marked: false, selectedColor: '#080835' } }), {})
       }}
       theme={{
-        backgroundColor: '#5693b6',
-        calendarBackground: '#5693b6',
+        backgroundColor: '#4F99DD',
+        calendarBackground: '#4F99DD',
         textSectionTitleColor: 'white',
         selectedDayBackgroundColor: '#080835',
         selectedDayTextColor: '#fff',
-        todayTextColor: '#FFDC98',
+        todayTextColor: '#080835',
         dayTextColor: 'white',
         textDisabledColor: '#d9e1e8',
         dotColor: '#00adf5',

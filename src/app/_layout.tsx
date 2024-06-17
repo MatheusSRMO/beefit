@@ -48,6 +48,9 @@ const InitialLayout = ({ loading }: InitialLayoutProps) => {
   if (!isLoaded || loading) {
     return <Loading />;
   }
+  // if (isLoaded || loading) {
+  //   return <Loading />;
+  // }
 
   return <Slot />; // exibe o slot (rota atual)
 };

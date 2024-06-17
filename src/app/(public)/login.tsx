@@ -1,9 +1,10 @@
-import { View, Keyboard, Animated, Easing } from 'react-native';
+import { View, Keyboard, Animated, Easing, Pressable } from 'react-native';
 import React from 'react';
 import Button from '@/components/button';
 import TextInput from '@/components/textInput';
 import HelpButton from '@/components/helpButton';
 import { useSignIn } from "@clerk/clerk-expo";
+import ButtonLight from '@/components/buttonLight';
 
 
 export default function Login() {
@@ -101,19 +102,30 @@ export default function Login() {
       }} />
       {/* <StatusBar style="light" backgroundColor='#141440' /> */}
 
-      <Animated.Text className='absolute text-[#FFDC98] text-4xl' style={{
-        top: titleTop
-      }}>Oi Aluno </Animated.Text>
+      {/* <Animated.Text className='absolute text-[#FFDC98]' style={{
+        top: titleTop,
+        left: 0,
+        fontFamily: 'Roboto_900Black',
+        fontSize: 32
+      }}>Oi </Animated.Text> */}
+
+      <Animated.Text className='absolute text-[#FFDC98]' style={{
+        top: titleTop,
+        // left: 0,
+        fontFamily: 'Roboto_900Black',
+        fontSize: 53
+      }}>Oi aluno </Animated.Text>
+      
 
       <Animated.View className='w-full flex items-center justify-center gap-5' style={{ top: textTop }}>
         <TextInput value={username} setValue={setUsername} placeholder='Usuário' type='default' />
         <TextInput value={password} setValue={setPassword} placeholder='Senha' type='password' />
         
-        <Button title='Entrar' className='bg-[#528AA5] w-6/12 mt-10 rounded-full py-2' onPress={onSignInPress} />
+        <ButtonLight title='Entrar' className='bg-[#4F99DD] w-6/12 mt-10 rounded-full py-2' onPress={onSignInPress} />
       </Animated.View>
 
 
-      <HelpButton title='Dúvidas?' onPress={() => {}} />
+      {/* <HelpButton title='Dúvidas?' onPress={() => {}} /> */}
     </View>
   );
 }
