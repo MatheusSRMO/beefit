@@ -121,7 +121,7 @@ export default function Login() {
         <TextInput value={username} setValue={setUsername} placeholder='Usuário' type='default' />
         <TextInput value={password} setValue={setPassword} placeholder='Senha' type='password' />
         
-        <ButtonLight title='Entrar' className='bg-[#4F99DD] w-6/12 mt-10 rounded-full py-2' onPress={onSignInPress} />
+        <Button title='Entrar' className='bg-[#4F99DD] w-4/12 mt-10 rounded-full py-2' onPress={onSignInPress} />
       </Animated.View>
 
 

@@ -8,7 +8,7 @@ interface ProgressOverviewProps {
 
 export default function ProgressOverview({ progress }: ProgressOverviewProps) {
   return (
-    <View className='w-full flex items-center justify-center bg-[#080835] p-1 mt-10 w-[85%] rounded-full'>
+    <View className=' flex items-center justify-center bg-[#080835] p-1 mt-10 w-[85%] rounded-full'>
       <Text className="text-[#FFDC98] text-2xl font-bold -top-6 -left-20">Seu rendimento</Text>
 
       {/* ProgressBar */}

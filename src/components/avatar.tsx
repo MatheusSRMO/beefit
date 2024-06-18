@@ -6,12 +6,12 @@ type AvatarProps = ImageProps & {
   size?: 'small' | 'medium' | 'large';
 }
 
-export default function Avatar({ size = 'large', ...rest }: AvatarProps) {
+export default function Avatar({ size = 'medium', ...rest }: AvatarProps) {
   return (
     <Image
       {...rest}
       style={{
-        borderWidth: 5, 
+        borderWidth: 3, 
         borderColor: '#4F99DD',
       }}
       className={clsx('rounded-full', {
