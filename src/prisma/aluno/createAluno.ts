@@ -1,28 +1,18 @@
 import { PrismaClient } from '@prisma/client'
+import { appendBaseUrl } from 'expo-router/build/fork/getPathFromState'
+import express from 'express'
 
 const prisma = new PrismaClient()
+const app = express();
 
-async function main() {
-
-    const numAluno = await prisma.aluno.count();
-    const aluno = await prisma.aluno.create({
-            data:{
-                nome: "Murilo",
-                email: `Murilo${numAluno}@gmail.com`,
-                senha: "Murilo123",
-            }
-        })
-    
-    console.log(aluno);
-    
-}
-
-main()
-    .then(async () => {
-        await prisma.$disconnect()
+app.post('/aluno', async (req, res) => {
+    const { nome, email, senha } = req.body;
+    const result = await prisma.aluno.create({
+        data: {
+            nome,
+            email,
+            senha,
+        },
     })
-    .catch(async (e) => {
-        console.error(e)
-        await prisma.$disconnect()
-        process.exit(1)
-    })
+    res.json(result);
+});

@@ -1,24 +1,17 @@
 import { PrismaClient } from '@prisma/client'
+import express from 'express'
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
+const app = express();
 
-async function main() {
-    const email = "Murilo1}@gmail.com";
-
-    const aluno = await prisma.aluno.findUnique({
-            where: { email: email},
+app.get('/aluno/:email', async(req, res) => {
+    const {email} = req.params;
+    try{
+        const aluno = await prisma.aluno.findUnique({
+            where: {email: email},
         })
-    
-    console.log(aluno);
-    
-}
-
-main()
-    .then(async () => {
-        await prisma.$disconnect()
-    })
-    .catch(async (e) => {
-        console.error(e)
-        await prisma.$disconnect()
-        process.exit(1)
-    })
+        res.json(aluno);
+    } catch (error) {
+        res.status(404).json({error: "Aluno não encontrado"});
+    }
+})

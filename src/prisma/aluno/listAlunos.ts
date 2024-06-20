@@ -1,24 +1,14 @@
 import { PrismaClient } from '@prisma/client'
+import express from 'express'
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
+const app = express();
 
-async function main() {
-
-    const allAlunos = await prisma.aluno.findMany();
-
-    if( allAlunos.length === 0 )
-        console.log("No aluno found on database.");
-    else    
-        console.log(allAlunos);
-    
-}
-
-main()
-    .then(async () => {
-        await prisma.$disconnect()
-    })
-    .catch(async (e) => {
-        console.error(e)
-        await prisma.$disconnect()
-        process.exit(1)
-    })
+app.get('/alunos', async(req, res) => {
+    try{
+        const alunos = await prisma.aluno.findMany();
+        res.json(alunos);
+    } catch (error) {
+        res.status(404).json({error: "Alunos não encontrados"});
+    }
+})
