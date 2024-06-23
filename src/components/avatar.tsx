@@ -1,6 +1,7 @@
 import { Image, ImageProps } from 'react-native'
 import React from 'react'
 import clsx from 'clsx';
+import { router } from 'expo-router';
 
 type AvatarProps = ImageProps & {
   size?: 'small' | 'medium' | 'large';
@@ -19,6 +20,10 @@ export default function Avatar({ size = 'medium', ...rest }: AvatarProps) {
         'w-20 h-20': size === 'medium',
         'w-32 h-32': size === 'large',
       })}
+      // onPress={() => {
+      //   router.push('./configurations')
+      // }}
+      
     />
   )
 }

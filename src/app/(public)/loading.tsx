@@ -1,22 +1,12 @@
-import { Animated, Easing, StyleSheet, View } from 'react-native'
-import React, { useEffect } from 'react'
-import LoadingC from '@/components/loading'
-import { StatusBar } from 'expo-status-bar'
-import Icon from 'react-native-vector-icons/FontAwesome'; // ou qualquer outro ícone que você prefira
+import React, { useEffect } from 'react';
+import { View, StyleSheet, Animated, Easing, Dimensions } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-// export default function Loading() {
-//   return (
-//     <View className='w-full h-full bg-[#006895]'>
-//       <StatusBar style="light" backgroundColor='#528AA5' />
-//       <LoadingC />
-//     </View>
-    
-//   )
-// }
-
+// const { width, height } = Dimensions.get('window');
 
 const LoadingSpinner = () => {
   const animatedValues = Array.from({ length: 20 }, () => new Animated.Value(0));
+  const rotateValue = new Animated.Value(0);
 
   useEffect(() => {
     // Animação dos pontos
@@ -31,21 +21,37 @@ const LoadingSpinner = () => {
         })
       ).start();
     });
+
+    // Animação de rotação
+    Animated.loop(
+      Animated.timing(rotateValue, {
+        toValue: 1,
+        duration: 2000,
+        delay: 1,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    ).start();
   }, []);
 
+  const rotate = rotateValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['10deg', '370deg'],
+  });
+
   return (
-    <View className='flex justify-center items-center w-full h-full bg-[#006895]'>
+    <View className='flex items-center justify-center'>
       <View style={styles.dashedCircle}>
         {animatedValues.map((value, index) => {
           const scale = value.interpolate({
             inputRange: [0, 0.1, 0.8, 1],
-            outputRange: [0, 1.2, 0, 0],
+            outputRange: [0, 1, 0, 0],
           });
           return (
             <Animated.View
               key={index}
               style={[
-                styles.dash,
+                styles.dot,
                 {
                   transform: [
                     { rotate: `${index * 18}deg` },
@@ -58,34 +64,46 @@ const LoadingSpinner = () => {
           );
         })}
 
-        <Icon name="rocket" size={30} color="#FFDC98" style={styles.icon} />
+        <Animated.View
+          style={[
+            styles.iconContainer,
+            {
+              transform: [
+                { rotate },
+                { translateY: -55},
+                // { translateX: -20 },
+              ],
+            },
+          ]}
+        >
+          <Icon name="rocket" size={30} color="#FFDC98" />
+        </Animated.View>
       </View>
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   dashedCircle: {
     width: 120,
     height: 120,
     position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  dash: {
+  dot: {
     position: 'absolute',
-    width: 10,
-    height: 10,
+    width: 15,
+    height: 15,
     backgroundColor: '#FFDC98',
-    borderRadius: 5,
+    borderRadius: 7.5,
     top: 0,
     left: 0,
   },
-  icon: {
+  iconContainer: {
     position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginLeft: -15,
-    marginTop: -15,
+    top: 80,
+    left: 85,
   },
 });
 

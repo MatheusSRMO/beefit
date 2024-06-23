@@ -5,13 +5,14 @@ import ButtonLight from "@/components/buttonLight";
 import ProfileHeader from "@/components/profileHeader";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from '@/components/button';
+import ButtonLogin from '@/components/buttonLogin';
 
 
 
-export default function Configurations() {
+export default function Settings() {
 
     return(
-        <View className='w-full h-full flex justify-center items-center pt-20'>
+        <View className='w-full h-full flex justify-center items-center'>
 
             <View className="flex flex-row items-center justify-center w-[90%] pt-10">
                 <ProfileHeader name='Matheus' lastName='Souza Ribeiro' imageSource='https://github.com/MatheusSRMO.png' />
@@ -23,7 +24,7 @@ export default function Configurations() {
 
             </View>
 
-            <View className="flex items-center my-10 py-10 w-[90%] h-[90%] rounded-3xl">
+            <View className="flex-1 items-center my-10 py-10 w-[90%] h-[90%] rounded-3xl">
 
                 <Button
                     title="Atualizar foto de perfil"
@@ -38,6 +39,13 @@ export default function Configurations() {
                     // onPress={() => {
                     //     router.push('./training')
                     // }}
+                />
+                <ButtonLogin 
+                    title='Sair' 
+                    className='absolute bottom-0 bg-[#90CAFF] w-4/12 mt-80 rounded-full py-2 ' 
+                    onPress={() => {
+                        router.push('/(public)/login')
+                    }}
                 />
 
             </View>
