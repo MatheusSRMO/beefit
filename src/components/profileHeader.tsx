@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
 
 interface ProfileHeaderProps {
   name: string;
@@ -28,14 +29,35 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ name, lastName, imageSour
 
     if (!result.canceled && result.assets.length > 0) {
       const imageAsset = result.assets[0].uri;
-      setImage(imageAsset);
+      console.log('Image URI selecionado:', imageAsset); // Log da URI da imagem selecionada
 
-      router.push({
-        pathname: '/(auth)/imagePreview',
-        params: {
-          imageFile: imageAsset,
-        },
-      });
+      const newPath = FileSystem.documentDirectory + 'selectedImage.png';
+
+      try {
+        await FileSystem.copyAsync({
+          from: imageAsset,
+          to: newPath,
+        });
+
+        const fileInfo = await FileSystem.getInfoAsync(newPath);
+        if (fileInfo.exists) {
+          setImage(newPath);
+          console.log('Imagem selecionada existe, navegando para ImagePreview'); // Log antes de navegar
+
+          router.push({
+            pathname: '/(auth)/imagePreview',
+            params: {
+              imageFile: newPath + '?' + new Date().getTime(), // Adiciona um timestamp para forçar atualização
+            },
+          });
+        } else {
+          console.log('Image file does not exist:', newPath);
+          alert('A imagem selecionada não pôde ser carregada.');
+        }
+      } catch (error) {
+        console.log('Erro ao copiar a imagem:', error);
+        alert('Erro ao copiar a imagem selecionada.');
+      }
     }
   };
 
