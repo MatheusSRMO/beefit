@@ -121,7 +121,7 @@ export default function Login() {
           fontSize: 32
         }}>Oi</Animated.Text>
 
-        <Animated.Text className='absolute text-[#FFDC98]' style={{
+        <Animated.Text className='absolute text-[#FFDC98] mt-1' style={{
           top: titleTop,
           left: 0,
           // textAlign: 'center',

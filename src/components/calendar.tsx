@@ -132,7 +132,6 @@ export default function Calendar({ onDayPress }: CalendarProps) {
         borderColor: 'transparent',
         width: 300,
         paddingBottom: 10,
-
       }}
 
       // markingType={'period'}
