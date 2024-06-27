@@ -42,9 +42,7 @@ export default function ImagePreview() {
     verifyAndSetFileExists();
   }, [imageFile]);
 
-  const closePreview = () => {
 
-  }
 
 
   return (
@@ -58,7 +56,6 @@ export default function ImagePreview() {
           router.back()
         }}
       >
-        
           <AntDesign name='close' size={22} color='#fff'/>
       </TouchableOpacity>
 
