@@ -6,98 +6,59 @@ import ProfileHeader from '@/components/profileHeader';
 import { useRouter } from 'expo-router';
 import ButtonLight from '@/components/buttonLight';
 import Icon from 'react-native-vector-icons/FontAwesome';
+// import Gesture from 'react-native-swipe-gesture-handler';
+import { SwipeGesture } from "react-native-swipe-gesture-handler";
+import { onSwipePerformed } from '@/lib/utils'
 
 export default function Main() {
   const router = useRouter();
+
   return (
-    <View className='w-full h-full flex justify-center items-center pt-20'>
+    <View className='w-full h-full flex items-center'>
+      <SwipeGesture onSwipePerformed={onSwipePerformed}>
+        <View className="flex flex-row items-center justify-center w-[90%]">
+          <ProfileHeader name='Matheus' lastName='Souza Ribeiro' imageSource='https://github.com/MatheusSRMO.png' />
+          <Icon
+            name="bars"
+            size={30}
+            color="#FFDC98"
+            onPress={() => {
+              router.push('./settings');
+            }}
+          />
+        </View>
 
-      <View className="flex flex-row items-center justify-center w-[90%] pt-10">
-        <ProfileHeader name='Matheus' lastName='Souza Ribeiro' imageSource='https://github.com/MatheusSRMO.png' />
-
-        <Icon name="bars" size={30} color="#FFDC98" 
-          onPress={() => {
-            router.push('./configurations')
-          }}/>
-
-      </View>
-
-      <View className="flex items-center my-10 py-10 w-[90%] h-[90%] rounded-3xl">
-        <Image
-          source={require('@/assets/images/bg-calendar.png')}
-          // resizeMode='stretch'
-          className='absolute w-full h-[75%] top-0 left-0 right-0 bottom-0 rounded-3xl'
-        />
-
-        <ScrollView
-          className='w-full h-full mb-10 rounded-3xl'
-          contentContainerStyle={{
-            flexGrow: 1,
-            // justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Calendar onDayPress={(day: { dateString: string; }) => {
-            router.push({
-              pathname: './training',
-              params: {
-                date: day.dateString,
-              },
-            });
-          }}
+        <View className="flex my-10 w-[90%] h-[100%] rounded-3xl justify-center align-center items-center">
+          <Image
+            source={require('@/assets/images/bg-calendar.png')}
+            className='absolute items-center w-full h-[50%] top-0 left-0 right-0 bottom-0 rounded-3xl'
           />
 
-        <ProgressOverview progress={0.8} />
+          <View className='absolute w-full h-[50%] justify-center align-center items-center left-0 top-0'>
+            <Calendar
+              onDayPress={(day: { dateString: string; }) => {
+                router.push({
+                  pathname: './training',
+                  params: {
+                    date: day.dateString,
+                  },
+                });
+              }}
+            />
+            <ProgressOverview progress={0.8} />
+          </View>
 
-        <ButtonLight
-          title="Treino"
-          className='bg-[#90CAFF] w-full mt-20'
-          onPress={() => {
-            router.push('./training')
-          }}
-        />
-
-          
-          {/* <ProgressOverview progress={0.1} />
-          <ProgressOverview progress={0.2} />
-          <ProgressOverview progress={0.3} /> */}
-
-        </ScrollView>
-
-      </View>
+          <View className="absolute w-full justify-end align-center left-0 pt-[60%] pb-10">
+            <ButtonLight
+              title="Treino"
+              className='bg-[#90CAFF] w-full'
+              onPress={() => {
+                router.push('./training');
+              }}
+            />
+          </View>
+        </View>
+      </SwipeGesture>
     </View>
   );
 }
-
-{/* <View className="flex my-10 py-10 w-[90%] h-[90%] rounded-3xl">
-        <Image
-          source={require('@/assets/images/bg-main.png')}
-          resizeMode='stretch'
-          className='absolute w-full h-[105%] top-0 left-0 right-0 bottom-0 rounded-3xl'
-        />
-
-        <ScrollView
-          className='w-full h-full mb-10 rounded-3xl'
-          contentContainerStyle={{
-            flexGrow: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-      
-          <Calendar onDayPress={(day: { dateString: string; }) => {
-            router.push({
-              pathname: './training',
-              params: {
-                date: day.dateString,
-              },
-            });
-          }}/>
-
-          <ProgressOverview progress={0.8} />
-          <ProgressOverview progress={0.1} />
-          <ProgressOverview progress={0.2} />
-          <ProgressOverview progress={0.3} />
-
-        </ScrollView>
-
-      </View> */}

@@ -5,6 +5,7 @@ import TextInput from '@/components/textInput';
 import HelpButton from '@/components/helpButton';
 import { useSignIn } from "@clerk/clerk-expo";
 import ButtonLight from '@/components/buttonLight';
+import ButtonLogin from '@/components/buttonLogin';
 
 
 export default function Login() {
@@ -95,33 +96,45 @@ export default function Login() {
     }
   };
   return (
-    <View className='w-full h-full flex items-center justify-center'>
+    <View className='w-full h-full flex-1 items-center justify-center'>
        <Animated.Image source={require('@/assets/images/loginBg.png')} className='absolute left-0 w-full' style={{
         resizeMode: 'stretch',
         top: imageTop
       }} />
       {/* <StatusBar style="light" backgroundColor='#141440' /> */}
 
-      {/* <Animated.Text className='absolute text-[#FFDC98]' style={{
-        top: titleTop,
-        left: 0,
-        fontFamily: 'Roboto_900Black',
-        fontSize: 32
-      }}>Oi </Animated.Text> */}
+      <View className='absolute top-0 left-0 right-0 items-center'
+        style={{
+          left: '45%',
+          transform: [
+            { translateX: -50 }, // Metade da largura do contêiner
+            // { translateY: -50 }, // Metade da altura do contêiner
+          ],
+        }}
+      >
+        <Animated.Text className='absolute text-[#FFDC98]' style={{
+          top: titleTop,
+          marginTop: -20,
+          left: 0,
+          // textAlign: 'center',
+          fontFamily: 'Roboto_900Black',
+          fontSize: 32
+        }}>Oi</Animated.Text>
 
-      <Animated.Text className='absolute text-[#FFDC98]' style={{
-        top: titleTop,
-        // left: 0,
-        fontFamily: 'Roboto_900Black',
-        fontSize: 53
-      }}>Oi aluno </Animated.Text>
-      
+        <Animated.Text className='absolute text-[#FFDC98] mt-1' style={{
+          top: titleTop,
+          left: 0,
+          // textAlign: 'center',
+          fontFamily: 'Roboto_900Black',
+          fontSize: 53
+        }}>Aluno</Animated.Text>
+      </View>
 
       <Animated.View className='w-full flex items-center justify-center gap-5' style={{ top: textTop }}>
         <TextInput value={username} setValue={setUsername} placeholder='Usuário' type='default' />
         <TextInput value={password} setValue={setPassword} placeholder='Senha' type='password' />
         
-        <Button title='Entrar' className='bg-[#4F99DD] w-4/12 mt-10 rounded-full py-2' onPress={onSignInPress} />
+        <ButtonLogin title='Entrar' className='bg-[#90CAFF] w-4/12 mt-10 rounded-full py-2' onPress={onSignInPress} />
       </Animated.View>
 
 

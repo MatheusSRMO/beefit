@@ -25,7 +25,7 @@ export default function TextInput({ value, setValue, type, placeholder, classNam
         value={value}
         onChangeText={setValue}
         placeholder={placeholder}
-        className={cn('bg-[#192C64] text-[#FFFFFF] px-5 py-2 rounded-2xl placeholder:text-[#FFFFFF]', className)}
+        className={cn('bg-[#192C64] text-[#FFFFFF] px-5 py-3 rounded-2xl placeholder:text-[#FFFFFF]', className)}
         keyboardType={type === 'password' ? 'default' : type}
         secureTextEntry={type === 'password' && !isPasswordVisible}
       />
