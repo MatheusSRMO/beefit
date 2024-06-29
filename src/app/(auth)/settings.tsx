@@ -26,20 +26,20 @@ export default function Settings() {
 
                 <View className="flex my-10 w-[90%] h-[100%] justify-center align-center items-center">
                      <View className="absolute items-center w-full left-0 top-0">
-                        <Button
+                        {/* <Button
                             title="Atualizar foto de perfil"
-                            className='bg-[#4F99DD] w-full py-5 mt-20'
+                            className='bg-[#4F99DD] w-full mt-20 p-3'
                             onPress={() => {
                                 router.push('/(public)/loading')
                             }}
-                        />
-                        {/* <Button
-                            title="Meus rendimentos"
-                            className='bg-[#4F99DD] w-full mt-5'
-                            // onPress={() => {
-                            //     router.push('./training')
-                            // }}
                         /> */}
+                        <Button
+                            title="Meus rendimentos"
+                            className='bg-[#4F99DD] w-full mt-5 p-3'
+                            onPress={() => {
+                                router.push('/performance')
+                            }}
+                        />
                     </View>
                     <View className="absolute w-full justify-end align-center items-center left-0 pt-[80%] pb-10">
                         <ButtonLogin 

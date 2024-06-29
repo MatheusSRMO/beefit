@@ -131,8 +131,14 @@ export default function Login() {
       </View>
 
       <Animated.View className='w-full flex items-center justify-center gap-5' style={{ top: textTop }}>
-        <TextInput value={username} setValue={setUsername} placeholder='Usuário' type='default' />
-        <TextInput value={password} setValue={setPassword} placeholder='Senha' type='password' />
+
+        <View className='w-[80%] gap-5'>
+          <TextInput value={username} setValue={setUsername} placeholder='Usuário' type='default' />
+          <TextInput value={password} setValue={setPassword} placeholder='Senha' type='password' />  
+        </View>
+
+                  
+
         
         <ButtonLogin title='Entrar' className='bg-[#90CAFF] w-4/12 mt-10 rounded-full py-2' onPress={onSignInPress} />
       </Animated.View>

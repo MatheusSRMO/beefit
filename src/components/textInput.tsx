@@ -20,12 +20,12 @@ export default function TextInput({ value, setValue, type, placeholder, classNam
   };
 
   return (
-    <View className='relative w-9/12'>
+    <View className='relative'>
       <RNTextInput
         value={value}
         onChangeText={setValue}
         placeholder={placeholder}
-        className={cn('bg-[#192C64] text-[#FFFFFF] px-5 py-3 rounded-2xl placeholder:text-[#FFFFFF]', className)}
+        className={cn('bg-[#192C64] text-[#FFFFFF] px-5 py-4 rounded-2xl placeholder:text-[#FFFFFF]', className)}
         keyboardType={type === 'password' ? 'default' : type}
         secureTextEntry={type === 'password' && !isPasswordVisible}
       />

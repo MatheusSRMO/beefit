@@ -1,5 +1,5 @@
 import { View, ScrollView, Image } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Calendar from '@/components/calendar';
 import ProgressOverview from '@/components/progressOverview';
 import ProfileHeader from '@/components/profileHeader';
@@ -9,9 +9,27 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 // import Gesture from 'react-native-swipe-gesture-handler';
 import { SwipeGesture } from "react-native-swipe-gesture-handler";
 import { onSwipePerformed } from '@/lib/utils'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function Main() {
+  const [target, setTarget] = useState(0);
   const router = useRouter();
+
+  const loadTarget = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@target');
+      if (value !== null) {
+        setTarget(parseInt(value, 10));
+      }
+    } catch (e) {
+      console.error('Failed to fetch the data from storage', e);
+    }
+  };
+
+  useEffect(() => {
+    loadTarget();
+  }, []);
 
   return (
     <View className='w-full h-full flex items-center'>
@@ -45,7 +63,7 @@ export default function Main() {
                 });
               }}
             />
-            <ProgressOverview progress={0.8} />
+            <ProgressOverview progress={2} total={target}/>
           </View>
 
           <View className="absolute w-full justify-end align-center left-0 pt-[60%] pb-10">
