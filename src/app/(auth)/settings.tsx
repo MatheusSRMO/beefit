@@ -16,7 +16,7 @@ export default function Settings() {
         <View className='w-full h-full flex items-center'>
             <SwipeGesture onSwipePerformed={onSwipePerformed}>
                 <View className="flex flex-row items-center justify-center w-[90%]">
-                    <ProfileHeader name='Matheus' lastName='Souza Ribeiro' imageSource='https://github.com/MatheusSRMO.png' />
+                    <ProfileHeader firstName='Matheus' lastName='Souza Ribeiro' url='https://github.com/MatheusSRMO.png' />
 
                     <Icon name="bars" size={30} color="#FFDC98" 
                     onPress={() => {

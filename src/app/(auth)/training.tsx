@@ -31,23 +31,23 @@ export default function Training() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get('https://api.example.com/data');
-        setData(response.data); 
-      } catch (error: any) {
-        if (!error.response) {
-          console.error('Network error:', error);
-        } else {
-          console.error('Error response:', error.response);
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const response = await axios.get('https://api.example.com/data');
+  //       setData(response.data); 
+  //     } catch (error: any) {
+  //       if (!error.response) {
+  //         console.error('Network error:', error);
+  //       } else {
+  //         console.error('Error response:', error.response);
+  //       }
+  //     }
+  //   };
   
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
 
   // useEffect(() => {
@@ -74,7 +74,7 @@ export default function Training() {
       <Image source={require('@/assets/images/loginBg.png')} className='absolute -top-20 -left-50 w-full ' resizeMode='stretch' />
 
       <Animated.FlatList
-        data={data}
+        data={dataset}
         horizontal
         style={styles.listContent}
         renderItem={({ item, index }) => {

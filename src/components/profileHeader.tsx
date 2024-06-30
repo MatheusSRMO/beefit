@@ -1,17 +1,25 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, FlatList, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
+import axios from 'axios';
 
-interface ProfileHeaderProps {
-  name: string;
+interface Aluno {
+  id: number;
+  firstName: string;
   lastName: string;
-  imageSource: string;
+  url: string;
 }
 
-const ProfileHeader: React.FC<ProfileHeaderProps> = ({ name, lastName, imageSource }) => {
-  const [image, setImage] = useState<string>(''); 
+interface ProfileHeaderProps {
+  firstName: string;
+  lastName: string;
+  url: string;
+}
+
+const ProfileHeader: React.FC<ProfileHeaderProps> = ({ firstName, lastName, url }) => {
+  const [image, setImage] = useState<string>(url); 
   const router = useRouter();
 
   const importImage = async () => {
@@ -29,7 +37,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ name, lastName, imageSour
 
     if (!result.canceled && result.assets.length > 0) {
       const imageAsset = result.assets[0].uri;
-      console.log('Image URI selecionado:', imageAsset); // Log da URI da imagem selecionada
+      console.log('Image URI selecionado:', imageAsset);
 
       const newPath = FileSystem.documentDirectory + 'selectedImage.png';
 
@@ -42,12 +50,12 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ name, lastName, imageSour
         const fileInfo = await FileSystem.getInfoAsync(newPath);
         if (fileInfo.exists) {
           setImage(newPath);
-          console.log('Imagem selecionada existe, navegando para ImagePreview'); // Log antes de navegar
+          console.log('Imagem selecionada existe, navegando para ImagePreview');
 
           router.push({
             pathname: '/(auth)/imagePreview',
             params: {
-              imageFile: newPath + '?' + new Date().getTime(), // Adiciona um timestamp para forçar atualização
+              imageFile: newPath + '?' + new Date().getTime(),
             },
           });
         } else {
@@ -64,16 +72,63 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ name, lastName, imageSour
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={importImage} activeOpacity={0.7} style={styles.avatarContainer}>
-        {/* Aqui você pode adicionar um ícone de câmera ou outra indicação visual */}
+        <Image source={{ uri: image }} style={styles.avatar} />
       </TouchableOpacity>
 
-      {/* <Avatar source={{ uri: imageSource }} /> */}
-
       <View style={styles.textContainer}>
-        <Text style={styles.nameText}>{name}</Text>
+        <Text style={styles.nameText}>{firstName}</Text>
         <Text style={styles.nameText}>{lastName}</Text>
       </View>
     </View>
+  );
+};
+
+const App: React.FC = () => {
+  const [alunos, setAlunos] = useState<Aluno[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get('http://192.168.0.112:3000/api/aluno');
+        const { body } = response.data;
+        setAlunos(body); 
+        setLoading(false);
+        console.log('Data fetched:', body);
+      } catch (error: any) {
+        setError(error);
+        setLoading(false);
+        if (!error.response) {
+          console.error('Network error:', error);
+          Alert.alert('Erro de Rede', 'Não foi possível conectar ao servidor. Verifique sua conexão de internet.');
+        } else {
+          console.error('Error response:', error.response);
+          Alert.alert('Erro', `Erro ao buscar dados: ${error.response.statusText}`);
+        }
+      }
+    };
+  
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
+  if (error) {
+    return <Text>Erro ao carregar dados: {error.message}</Text>;
+  }
+
+  const selectedAluno = alunos.find(aluno => aluno.id === 8);
+
+  return (
+    <ProfileHeader 
+      firstName={selectedAluno?.firstName || ""} 
+      lastName={selectedAluno?.lastName || ""} 
+      url={selectedAluno?.url || ""} 
+    />
   );
 };
 
@@ -82,7 +137,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: '90%',
-    paddingTop: 10,
+    paddingTop: 40,
   },
   avatarContainer: {
     width: 70,
@@ -92,6 +147,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
+  },
+  avatar: {
+    width: 70,
+    height: 70,
+    borderRadius: 50,
   },
   textContainer: {
     flex: 1,
@@ -106,4 +166,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileHeader;
+export default App;
