@@ -15,8 +15,6 @@ export default function ProgressBar({ progress, total, className }: ProgressBarP
   else if( total < progress )  width = 100;
   else                    width = (progress / total) * 100;
 
-  console.log(progress, total)
-
   return (
     <View className={cn('h-3 w-[90%] bg-[#194064] rounded-full', className)}>
       <View style={{ width: `${width}%` }} className='bg-[#74d3e7] h-3 rounded-full' />
