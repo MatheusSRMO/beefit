@@ -1,22 +1,34 @@
 import Button from '@/components/button';
 import Card from '@/components/card';
 import MyCarousel from '@/components/carousel';
-import React, { useState } from 'react';
+import { router } from 'expo-router';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, Animated, ImageBackground, Image } from 'react-native';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = 280;
 
 const data = [
-  { key: '1', random: Math.floor(Math.random() * 3) },
-  { key: '2', random: 0 },
-  { key: '3', random: 1 },
-  { key: '4', random: 2 },
+  { key: '1', random: 1 },
+  { key: '2', random: 2 },
+  { key: '3', random: 3 },
+  { key: '4', random: 0 },
+  
 ];
 
 export default function Training() {
   const [focusedIndex, setFocusedIndex] = useState(0);
+  const [lastIndex, setLastIndex] = useState(0);
+  const [numExercises, setNumExercises] = useState(0);
   const scrollX = new Animated.Value(0);
+
+
+  useEffect(() => {
+    if (focusedIndex < data.length) {
+      setNumExercises(data[focusedIndex].random);
+    }
+  }, [focusedIndex]);
+
 
   return (
     <View className='flex-1 items-center justify-center'>
@@ -29,31 +41,59 @@ export default function Training() {
         style={styles.listContent}
         renderItem={({ item, index }) => {
           const random = item.random;
-
           const isFocused = index === focusedIndex;
-          return (
-            <Card isFocused={isFocused}>
-              {/* sorteia se vai ser 1, 2 ou 3 imagens */}
 
-              {random === 0 && (
-                <MyCarousel
-                  image1={{ source: require('@/assets/gifs/exercicio1_animated.gif') }}
-                />
+          return (
+            <View>
+              { random === 0 ? (
+                <Card isFocused={isFocused} group={1} type={'end'} className='items-center align-center justify-center'>
+                  <Text className='text-white' style={{
+                      textAlign: 'center',
+                      fontFamily: 'Roboto_400Regular',
+                      fontSize: 16}}>
+                      Você ainda não completou todos {'\n'} os exercícios!
+                  </Text>
+                  <Button
+                    title="Voltar aos exercícios"
+                    className='bg-[#775FD1] w-[50%] w-[70%] px-2 py-3 mt-20'
+                    onPress={() => {
+                      router.push('./training');
+                    }}
+                  />
+                  <Button
+                    title="Finalizar"
+                    className='bg-[#4F99DD] w-[70%] px-2 py-3 mt-5'
+                    onPress={() => {
+                      router.back();
+                    }}
+                  />
+                </Card>
+              ) : (
+                <Card isFocused={isFocused} group={1} type={'default'}>
+                  {random === 1 && (
+                    <MyCarousel
+                      image1={{ source: require('@/assets/gifs/exercicio1_animated.gif') }}
+                    />
+                  )}
+                  {random === 2 && (
+                    <MyCarousel
+                      image1={{ source: require('@/assets/gifs/exercicio1_animated.gif') }}
+                      image2={{ source: require('@/assets/gifs/exercicio2_animated.gif') }}
+                    />
+                  )}
+                  {random === 3 && (
+                    <MyCarousel
+                      image1={{ source: require('@/assets/gifs/exercicio1_animated.gif') }}
+                      image2={{ source: require('@/assets/gifs/exercicio2_animated.gif') }}
+                      image3={{ source: require('@/assets/gifs/exercicio3_animated.gif') }}
+                    />
+                  )}
+                </Card>
               )}
-              {random === 1 && (
-                <MyCarousel
-                  image1={{ source: require('@/assets/gifs/exercicio1_animated.gif') }}
-                  image2={{ source: require('@/assets/gifs/exercicio2_animated.gif') }}
-                />
-              )}
-              {random === 2 && (
-                <MyCarousel
-                  image1={{ source: require('@/assets/gifs/exercicio1_animated.gif') }}
-                  image2={{ source: require('@/assets/gifs/exercicio2_animated.gif') }}
-                  image3={{ source: require('@/assets/gifs/exercicio3_animated.gif') }}
-                />
-              )}
-            </Card>
+
+            </View>
+            
+            
           );
         }}
         keyExtractor={item => item.key}
@@ -68,9 +108,21 @@ export default function Training() {
         onMomentumScrollEnd={event => {
           const index = Math.round(event.nativeEvent.contentOffset.x / (CARD_WIDTH + 20));
           setFocusedIndex(index);
+          setLastIndex(index-1);
         }}
       />
-      <Button className='absolute bottom-7 bg-[#21175C] w-8/12' title='Iniciar' />
+      {numExercises !== 0 && (
+        <Button
+          className='absolute bottom-7 bg-[#4F99DD] w-8/12 p-2'
+          title='Iniciar'
+          onPress={() => {
+            router.push({
+              pathname: './exercises',
+              params: { numExercises },
+            });
+          }}
+        />
+      )}
     </View>
   );
 };
@@ -87,6 +139,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: CARD_WIDTH,
+    // backgroundColor: '#90CAFF',
     height: 400,
     borderRadius: 20,
     marginHorizontal: 7.2,

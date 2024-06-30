@@ -19,7 +19,12 @@ export default function Settings() {
     const [progress, setProgress] = React.useState('');
     const [showNumDays, setShowNumDays] = React.useState(false);
 
-    // console.log("Oi", numDays);
+    const calculatePercentage = (progress: number, target: number): number => {
+        if (target === 0) return 0;
+        return Math.min((progress / target) * 100, 100); 
+    };
+
+    const percentage = calculatePercentage(parseInt(progress) || 0, parseInt(target) || 0);
 
     const saveTarget = async (value: string) => {
         try {
@@ -95,7 +100,7 @@ export default function Settings() {
                             />
 
                             <View className='absolute w-full h-[50%] items-center justify-center left-5 top-0'>
-                                <ProgressOverview progress={parseInt(progress) || 0} total={parseInt(target) || 0}/>
+                                <ProgressOverview progress={2} total={parseInt(target) || 0}/>
                             </View>
                         </View>
                         
@@ -106,6 +111,14 @@ export default function Settings() {
                             fontFamily: 'Roboto_400Regular',
                             fontSize: 16}}>
                             Você treinou {progress || 0} dias essa semana!
+                        </Text>
+                        <Text className='text-white' style={{
+                            marginTop: 0,
+                            left: 20,
+                            textAlign: 'center',
+                            fontFamily: 'Roboto_400Regular',
+                            fontSize: 16}}>
+                            {percentage}% da sua meta :)
                         </Text>
 
                         <Text className='text-[#FFDC98]' style={{
