@@ -4,44 +4,83 @@ import MyCarousel from '@/components/carousel';
 import { router } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, Animated, ImageBackground, Image } from 'react-native';
+import axios from 'axios';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = 280;
 
-const data = [
+const dataset = [
   { key: '1', random: 1 },
   { key: '2', random: 2 },
   { key: '3', random: 3 },
   { key: '4', random: 0 },
-  
 ];
+
+interface ExerciseData {
+  id: number;
+  nome: string;
+  gifLink: string;
+}
 
 export default function Training() {
   const [focusedIndex, setFocusedIndex] = useState(0);
-  const [lastIndex, setLastIndex] = useState(0);
   const [numExercises, setNumExercises] = useState(0);
+  const [number, setNumber] = useState(1);
   const scrollX = new Animated.Value(0);
+  const [data, setData] = useState<ExerciseData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get('https://api.example.com/data');
+        setData(response.data); 
+      } catch (error: any) {
+        if (!error.response) {
+          console.error('Network error:', error);
+        } else {
+          console.error('Error response:', error.response);
+        }
+      }
+    };
+  
+    fetchData();
+  }, []);
+
+
+  // useEffect(() => {
+  //   if (focusedIndex < dataset.length) {
+  //     setNumExercises(dataset[focusedIndex].random);
+  //   }
+  // }, [focusedIndex]);
 
   useEffect(() => {
     if (focusedIndex < data.length) {
-      setNumExercises(data[focusedIndex].random);
+      setNumExercises(data[focusedIndex].id);
     }
+  }, [focusedIndex, data]);
+
+  useEffect(() => {
+    setNumExercises(number);
   }, [focusedIndex]);
+
 
 
   return (
     <View className='flex-1 items-center justify-center'>
 
-      <Image source={require('@/assets/images/loginBg.png')} className='absolute -top-20 left-0 w-full ' resizeMode='stretch' />
+      <Image source={require('@/assets/images/loginBg.png')} className='absolute -top-20 -left-50 w-full ' resizeMode='stretch' />
 
       <Animated.FlatList
         data={data}
         horizontal
         style={styles.listContent}
         renderItem={({ item, index }) => {
-          const random = item.random;
+          const random = item.id;
           const isFocused = index === focusedIndex;
+          
 
           return (
             <View>
@@ -70,12 +109,12 @@ export default function Training() {
                 </Card>
               ) : (
                 <Card isFocused={isFocused} group={1} type={'default'}>
-                  {random === 1 && (
+                  {random === 2 && (
                     <MyCarousel
-                      image1={{ source: require('@/assets/gifs/exercicio1_animated.gif') }}
+                      image1={{ source: { uri: item.gifLink } }}
                     />
                   )}
-                  {random === 2 && (
+                  {random === 1 && (
                     <MyCarousel
                       image1={{ source: require('@/assets/gifs/exercicio1_animated.gif') }}
                       image2={{ source: require('@/assets/gifs/exercicio2_animated.gif') }}
@@ -96,7 +135,7 @@ export default function Training() {
             
           );
         }}
-        keyExtractor={item => item.key}
+        keyExtractor={item => item.id.toString()}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: (width - CARD_WIDTH) / 2, }}
         snapToInterval={CARD_WIDTH + 20} // largura do card + margem
@@ -108,7 +147,6 @@ export default function Training() {
         onMomentumScrollEnd={event => {
           const index = Math.round(event.nativeEvent.contentOffset.x / (CARD_WIDTH + 20));
           setFocusedIndex(index);
-          setLastIndex(index-1);
         }}
       />
       {numExercises !== 0 && (

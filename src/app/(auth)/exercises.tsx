@@ -6,7 +6,6 @@ import MyCarousel from '@/components/carousel';
 import { FA5Style } from '@expo/vector-icons/build/FontAwesome5';
 import { router, useLocalSearchParams } from 'expo-router';
 
-
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = 280;
 
@@ -21,7 +20,7 @@ export default function Exercises() {
   const { numExercises } = useLocalSearchParams();
 
   const numCards = typeof numExercises === 'string' ? parseInt(numExercises) : 1;
-  console.log(numCards);
+  // console.log(numCards);
 
   // Array de quantidade de carrosséis baseado em numExercises
   const carousels = Array.from({ length: numCards }, (_, index) => (
