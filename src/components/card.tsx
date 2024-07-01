@@ -7,23 +7,10 @@ interface CardProps {
   children?: React.ReactNode;
   isFocused: boolean;
   className?: string;
-  group: number;
-  type: 'default' | 'exercise' | 'end';
+  type: 'default' | 'description' | 'end';
 }
 
-export default function Card({ isFocused, children, className, group, type }: CardProps) {
-  let cardHeight = 420; // Altura padrão
-  switch (group) {
-    case 1:
-      cardHeight = 420;
-      break;
-    case 2:
-      cardHeight = 220;
-      break;
-    case 3:
-      cardHeight = 150;
-      break;
-  }
+export default function Card({ isFocused, children, className, type }: CardProps) {
 
   // Definindo a cor de fundo com base no tipo ('default' ou 'exercise')
   const backgroundColor = type === 'default' ? '#FFFFFF' : '#21175C';
@@ -34,37 +21,14 @@ export default function Card({ isFocused, children, className, group, type }: Ca
       style={StyleSheet.flatten([
         styles.card,
         isFocused && styles.focusedCard,
-        { height: cardHeight, backgroundColor },
+        { backgroundColor },
       ])}
     >
       {children}
-      {type === 'exercise' ? (
-        <View className='flex flex-col w-full h-full'>
-          <View className='bg-[#775FD1] w-[90%] left-4 pl-3 py-3 rounded-3xl mt-5'>
-            <Text className='text-white' style={{
-              fontFamily: 'Roboto_500Medium',
-              fontSize: 20}}>
-              Nome exercício
-            </Text> 
-          </View>
-          <Text className='text-white mt-3 justify-ent bottom-0' style={{
-            left: 20,
-            fontFamily: 'Roboto_400Regular',
-            fontSize: 16}}>
-            3 séries | 8 a 12 repetições {'\n'}carga: 10 kg
-          </Text>
-
-          <Text className='text-[#90CAFF] mt-3 justify-ent bottom-0' style={{
-            left: 20,
-            fontFamily: 'Roboto_400Regular',
-            fontSize: 16}}>
-            Observações:
-          </Text>
-
-        </View>
+      {type === 'description' ? (
+        <View className='flex flex-col w-full h-full'></View>
       ) : (
-        <View className='flex flex-col justify-start'>
-        </View>
+        <View className='flex flex-col justify-start'></View>
       )}
     </View>
   );

@@ -3,7 +3,7 @@ import Card from '@/components/card';
 import MyCarousel from '@/components/carousel';
 import { router } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, Animated, ImageBackground, Image } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Animated, ImageBackground, Image, Alert } from 'react-native';
 import axios from 'axios';
 
 const { width } = Dimensions.get('window');
@@ -16,57 +16,55 @@ const dataset = [
   { key: '4', random: 0 },
 ];
 
-interface ExerciseData {
+interface Treino {
   id: number;
-  nome: string;
-  gifLink: string;
+  exercicios: number[];
+  aluno_id: number;
 }
 
 export default function Training() {
   const [focusedIndex, setFocusedIndex] = useState(0);
-  const [numExercises, setNumExercises] = useState(0);
-  const [number, setNumber] = useState(1);
+  // const [numExercises, setNumExercises] = useState(0);
+  // const [number, setNumber] = useState(1);
   const scrollX = new Animated.Value(0);
-  const [data, setData] = useState<ExerciseData[]>([]);
+  const [treinos, setTreinos] = useState<Treino[]>([]);
+  // const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [alunoId, setAlunoId] = useState<number | null>(null);
+  const [exerciseId, setExerciseId] = useState<number | null>(null);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const response = await axios.get('https://api.example.com/data');
-  //       setData(response.data); 
-  //     } catch (error: any) {
-  //       if (!error.response) {
-  //         console.error('Network error:', error);
-  //       } else {
-  //         console.error('Error response:', error.response);
-  //       }
-  //     }
-  //   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (alunoId === null) {
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const response = await axios.get(`http://192.168.0.112:3000/api/aluno/treino/a?aluno_id=${alunoId}`);
+        const { body } = response.data;
+        setTreinos(body); 
+        setLoading(false);
+        console.log('Data fetched:', body);
+      } catch (error: any) {
+        setError(error);
+        setLoading(false);
+        if (!error.response) {
+          console.error('Network error:', error);
+          Alert.alert('Erro de Rede', 'Não foi possível conectar ao servidor. Verifique sua conexão de internet.');
+        } else {
+          console.error('Error response:', error.response);
+          Alert.alert('Erro', `Erro ao buscar dados: ${error.response.statusText}`);
+        }
+      }
+    };
   
-  //   fetchData();
-  // }, []);
+    fetchData();
+  }, [alunoId]); 
 
-
-  // useEffect(() => {
-  //   if (focusedIndex < dataset.length) {
-  //     setNumExercises(dataset[focusedIndex].random);
-  //   }
-  // }, [focusedIndex]);
-
-  useEffect(() => {
-    if (focusedIndex < data.length) {
-      setNumExercises(data[focusedIndex].id);
-    }
-  }, [focusedIndex, data]);
-
-  useEffect(() => {
-    setNumExercises(number);
-  }, [focusedIndex]);
-
-
+  const selectedTreino = treinos.find(treino => treino.id === 1);
 
   return (
     <View className='flex-1 items-center justify-center'>
@@ -74,18 +72,17 @@ export default function Training() {
       <Image source={require('@/assets/images/loginBg.png')} className='absolute -top-20 -left-50 w-full ' resizeMode='stretch' />
 
       <Animated.FlatList
-        data={dataset}
+        data={selectedTreino?.exercicios}
         horizontal
         style={styles.listContent}
         renderItem={({ item, index }) => {
-          const random = item.id;
           const isFocused = index === focusedIndex;
+          setExerciseId(item);
           
-
           return (
             <View>
-              { random === 0 ? (
-                <Card isFocused={isFocused} group={1} type={'end'} className='items-center align-center justify-center'>
+              { item === null ? (
+                <Card isFocused={isFocused} type={'end'} className='items-center align-center justify-center'>
                   <Text className='text-white' style={{
                       textAlign: 'center',
                       fontFamily: 'Roboto_400Regular',
@@ -108,34 +105,17 @@ export default function Training() {
                   />
                 </Card>
               ) : (
-                <Card isFocused={isFocused} group={1} type={'default'}>
-                  {random === 2 && (
-                    <MyCarousel
-                      image1={{ source: { uri: item.gifLink } }}
-                    />
-                  )}
-                  {random === 1 && (
+                <Card isFocused={isFocused} type={'default'}>
                     <MyCarousel
                       image1={{ source: require('@/assets/gifs/exercicio1_animated.gif') }}
-                      image2={{ source: require('@/assets/gifs/exercicio2_animated.gif') }}
                     />
-                  )}
-                  {random === 3 && (
-                    <MyCarousel
-                      image1={{ source: require('@/assets/gifs/exercicio1_animated.gif') }}
-                      image2={{ source: require('@/assets/gifs/exercicio2_animated.gif') }}
-                      image3={{ source: require('@/assets/gifs/exercicio3_animated.gif') }}
-                    />
-                  )}
                 </Card>
               )}
-
             </View>
             
             
           );
         }}
-        keyExtractor={item => item.id.toString()}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: (width - CARD_WIDTH) / 2, }}
         snapToInterval={CARD_WIDTH + 20} // largura do card + margem
@@ -149,14 +129,14 @@ export default function Training() {
           setFocusedIndex(index);
         }}
       />
-      {numExercises !== 0 && (
+      {selectedTreino?.exercicios !== null && (
         <Button
           className='absolute bottom-7 bg-[#4F99DD] w-8/12 p-2'
           title='Iniciar'
           onPress={() => {
             router.push({
               pathname: './exercises',
-              params: { numExercises },
+              params: { exercicio: exerciseId },
             });
           }}
         />

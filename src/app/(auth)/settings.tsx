@@ -16,9 +16,9 @@ export default function Settings() {
         <View className='w-full h-full flex items-center'>
             <SwipeGesture onSwipePerformed={onSwipePerformed}>
                 <View className="flex flex-row items-center justify-center w-[90%]">
-                    <ProfileHeader firstName='Matheus' lastName='Souza Ribeiro' url='https://github.com/MatheusSRMO.png' />
-
+                    <ProfileHeader/>
                     <Icon name="bars" size={30} color="#FFDC98" 
+                    className='pt-10'
                     onPress={() => {
                         router.back()
                     }}/>
