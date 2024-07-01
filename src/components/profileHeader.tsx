@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useId, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, FlatList, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import axios from 'axios';
+import { useAuth } from "@clerk/clerk-expo";
+
 
 interface Aluno {
   id: number;
@@ -84,19 +86,24 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ firstName, lastName, url 
 };
 
 const App: React.FC = () => {
-  const [alunos, setAlunos] = useState<Aluno[]>([]);
+  const [aluno, setAluno] = useState<Aluno | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const { userId } = useAuth();
+
+  const url = `https://beefit-admin.vercel.app/api/aluno/${userId}`;
+  console.log(url);
+  
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://192.168.0.112:3000/api/aluno');
+        const response = await axios.get(`https://beefit-admin.vercel.app/api/aluno/${userId}`);
         const { body } = response.data;
-        setAlunos(body); 
+        setAluno(body); 
         setLoading(false);
-        console.log('Data fetched:', body);
+        // console.log('Data fetched:', response);
       } catch (error: any) {
         setError(error);
         setLoading(false);
@@ -109,9 +116,9 @@ const App: React.FC = () => {
         }
       }
     };
-  
-    fetchData();
-  }, []);
+
+    if(userId)  fetchData();
+  }, [userId]);
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
@@ -121,13 +128,11 @@ const App: React.FC = () => {
     return <Text>Erro ao carregar dados: {error.message}</Text>;
   }
 
-  const selectedAluno = alunos.find(aluno => aluno.id === 8);
-
   return (
     <ProfileHeader 
-      firstName={selectedAluno?.firstName || ""} 
-      lastName={selectedAluno?.lastName || ""} 
-      url={selectedAluno?.url || ""} 
+      firstName={aluno?.firstName || ""} 
+      lastName={aluno?.lastName || ""} 
+      url={aluno?.url || ""} 
     />
   );
 };

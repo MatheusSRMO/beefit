@@ -48,9 +48,6 @@ const InitialLayout = ({ loading }: InitialLayoutProps) => {
   if (!isLoaded || loading) {
     return <Loading />;
   }
-  // if (isLoaded || loading) {
-  //   return <Loading />;
-  // }
 
   return <Slot />; // exibe o slot (rota atual)
 };
@@ -92,7 +89,7 @@ export default function Layout() {
   return (
     <ClerkProvider
       publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!}
-      tokenCache={tokenCache}
+      // tokenCache={tokenCache}
     >
       <SafeAreaView className="items-center justify-center w-full h-full bg-[#080835]">
         <InitialLayout loading={!fontsLoaded} />
