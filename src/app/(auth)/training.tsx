@@ -91,7 +91,7 @@ export default function Training() {
                   </Text>
                   <Button
                     title="Voltar aos exercícios"
-                    className='bg-[#775FD1] w-[50%] w-[70%] px-2 py-3 mt-20'
+                    className='bg-[#775FD1] w-[70%] px-2 py-3 mt-20'
                     onPress={() => {
                       router.push('./training');
                     }}

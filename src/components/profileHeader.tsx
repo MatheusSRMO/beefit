@@ -73,7 +73,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ firstName, lastName, url 
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={importImage} activeOpacity={0.7} style={styles.avatarContainer}>
+      <TouchableOpacity activeOpacity={0.7} style={styles.avatarContainer}>
         <Image source={{ uri: image }} style={styles.avatar} />
       </TouchableOpacity>
 
@@ -95,30 +95,30 @@ const App: React.FC = () => {
   console.log(url);
   
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get(`https://beefit-admin.vercel.app/api/aluno/${userId}`);
-        const { body } = response.data;
-        setAluno(body); 
-        setLoading(false);
-        // console.log('Data fetched:', response);
-      } catch (error: any) {
-        setError(error);
-        setLoading(false);
-        if (!error.response) {
-          console.error('Network error:', error);
-          Alert.alert('Erro de Rede', 'Não foi possível conectar ao servidor. Verifique sua conexão de internet.');
-        } else {
-          console.error('Error response:', error.response);
-          Alert.alert('Erro', `Erro ao buscar dados: ${error.response.statusText}`);
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const response = await axios.get(`https://beefit-admin.vercel.app/api/aluno/${userId}`);
+  //       const { body } = response.data;
+  //       setAluno(body); 
+  //       setLoading(false);
+  //       // console.log('Data fetched:', response);
+  //     } catch (error: any) {
+  //       setError(error);
+  //       setLoading(false);
+  //       if (!error.response) {
+  //         console.error('Network error:', error);
+  //         Alert.alert('Erro de Rede', 'Não foi possível conectar ao servidor. Verifique sua conexão de internet.');
+  //       } else {
+  //         console.error('Error response:', error.response);
+  //         Alert.alert('Erro', `Erro ao buscar dados: ${error.response.statusText}`);
+  //       }
+  //     }
+  //   };
 
-    if(userId)  fetchData();
-  }, [userId]);
+  //   if(userId)  fetchData();
+  // }, [userId]);
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;

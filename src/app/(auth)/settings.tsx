@@ -6,7 +6,7 @@ import ProfileHeader from "@/components/profileHeader";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from '@/components/button';
 import ButtonLogin from '@/components/buttonLogin';
-import { SwipeGesture } from 'react-native-swipe-gesture-handler';
+// import { SwipeGesture } from 'react-native-swipe-gesture-handler';
 import { onSwipePerformed } from '@/lib/utils'
 
 
@@ -14,7 +14,7 @@ export default function Settings() {
 
     return(
         <View className='w-full h-full flex items-center'>
-            <SwipeGesture onSwipePerformed={onSwipePerformed}>
+            {/* <SwipeGesture onSwipePerformed={onSwipePerformed}> */}
                 <View className="flex flex-row items-center justify-center w-[90%]">
                     <ProfileHeader/>
                     <Icon name="bars" size={30} color="#FFDC98" 
@@ -51,7 +51,7 @@ export default function Settings() {
                         /> 
                     </View>
                 </View>
-            </SwipeGesture>
+            {/* </SwipeGesture> */}
         </View>
     );
 }

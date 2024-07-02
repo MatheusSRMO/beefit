@@ -6,7 +6,7 @@ import ProfileHeader from "@/components/profileHeader";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from '@/components/button';
 import ButtonLogin from '@/components/buttonLogin';
-import { SwipeGesture } from 'react-native-swipe-gesture-handler';
+// import { SwipeGesture } from 'react-native-swipe-gesture-handler';
 import { onSwipePerformed } from '@/lib/utils'
 import ProgressOverview from '@/components/progressOverview';
 import TextInput from '@/components/textInput';
@@ -61,7 +61,7 @@ export default function Settings() {
     >
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <SwipeGesture onSwipePerformed={onSwipePerformed}>
+                {/* <SwipeGesture onSwipePerformed={onSwipePerformed}> */}
 
                     <Animated.Image source={require('@/assets/images/loginBg.png')} 
                         className='absolute w-full justify-start align-center items-center left-0 top-0' style={{
@@ -163,7 +163,7 @@ export default function Settings() {
                         </View>
                         )}
                     </View>
-                </SwipeGesture>
+                {/* </SwipeGesture> */}
             </TouchableWithoutFeedback>
         </ScrollView>
     </KeyboardAvoidingView>
