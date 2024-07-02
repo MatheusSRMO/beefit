@@ -5,10 +5,10 @@ import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import axios from 'axios';
 import { useAuth } from "@clerk/clerk-expo";
+import Avatar from './avatar';
 
 
 interface Aluno {
-  id: number;
   firstName: string;
   lastName: string;
   url: string;
@@ -24,59 +24,57 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ firstName, lastName, url 
   const [image, setImage] = useState<string>(url); 
   const router = useRouter();
 
-  const importImage = async () => {
-    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permissionResult.granted === false) {
-      alert('Permissão para acessar a galeria é necessária!');
-      return;
-    }
+  // const importImage = async () => {
+  //   let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  //   if (permissionResult.granted === false) {
+  //     alert('Permissão para acessar a galeria é necessária!');
+  //     return;
+  //   }
 
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    });
+  //   let result = await ImagePicker.launchImageLibraryAsync({
+  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  //     allowsEditing: true,
+  //     quality: 1,
+  //   });
 
-    if (!result.canceled && result.assets.length > 0) {
-      const imageAsset = result.assets[0].uri;
-      console.log('Image URI selecionado:', imageAsset);
+  //   if (!result.canceled && result.assets.length > 0) {
+  //     const imageAsset = result.assets[0].uri;
+  //     console.log('Image URI selecionado:', imageAsset);
 
-      const newPath = FileSystem.documentDirectory + 'selectedImage.png';
+  //     const newPath = FileSystem.documentDirectory + 'selectedImage.png';
 
-      try {
-        await FileSystem.copyAsync({
-          from: imageAsset,
-          to: newPath,
-        });
+  //     try {
+  //       await FileSystem.copyAsync({
+  //         from: imageAsset,
+  //         to: newPath,
+  //       });
 
-        const fileInfo = await FileSystem.getInfoAsync(newPath);
-        if (fileInfo.exists) {
-          setImage(newPath);
-          console.log('Imagem selecionada existe, navegando para ImagePreview');
+  //       const fileInfo = await FileSystem.getInfoAsync(newPath);
+  //       if (fileInfo.exists) {
+  //         setImage(newPath);
+  //         console.log('Imagem selecionada existe, navegando para ImagePreview');
 
-          router.push({
-            pathname: '/(auth)/imagePreview',
-            params: {
-              imageFile: newPath + '?' + new Date().getTime(),
-            },
-          });
-        } else {
-          console.log('Image file does not exist:', newPath);
-          alert('A imagem selecionada não pôde ser carregada.');
-        }
-      } catch (error) {
-        console.log('Erro ao copiar a imagem:', error);
-        alert('Erro ao copiar a imagem selecionada.');
-      }
-    }
-  };
+  //         router.push({
+  //           pathname: '/(auth)/imagePreview',
+  //           params: {
+  //             imageFile: newPath + '?' + new Date().getTime(),
+  //           },
+  //         });
+  //       } else {
+  //         console.log('Image file does not exist:', newPath);
+  //         alert('A imagem selecionada não pôde ser carregada.');
+  //       }
+  //     } catch (error) {
+  //       console.log('Erro ao copiar a imagem:', error);
+  //       alert('Erro ao copiar a imagem selecionada.');
+  //     }
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={importImage} activeOpacity={0.7} style={styles.avatarContainer}>
-        <Image source={{ uri: image }} style={styles.avatar} />
-      </TouchableOpacity>
-
+      <Avatar source={{ uri: url }}/>
+      
       <View style={styles.textContainer}>
         <Text style={styles.nameText}>{firstName}</Text>
         <Text style={styles.nameText}>{lastName}</Text>
@@ -93,15 +91,21 @@ const App: React.FC = () => {
 
   const url = `https://beefit-admin.vercel.app/api/aluno/${userId}`;
   console.log(url);
-  
 
+  const user: Aluno = {
+    firstName: "Abelha",
+    lastName: "Abelhinha",
+    url: "https://www.mundoecologia.com.br/wp-content/uploads/2019/01/Apis-Mellifera-6.jpg" 
+  };
+
+  
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
         const response = await axios.get(`https://beefit-admin.vercel.app/api/aluno/${userId}`);
         const { body } = response.data;
-        setAluno(body); 
+        setAluno(user); 
         setLoading(false);
         // console.log('Data fetched:', response);
       } catch (error: any) {

@@ -75,26 +75,6 @@ export default function Login() {
     };
   }, []);
 
-  // const onSignInPress = async () => {
-  //   if (!isLoaded) {
-  //     return;
-  //   }
-
-  //   try {
-  //     const completeSignIn = await signIn.create({
-  //       identifier: username,
-  //       password,
-  //     });
-  //     // This is an important step,
-  //     // This indicates the user is signed in
-  //     await setActive({ session: completeSignIn.createdSessionId });
-  //   } catch (err: any) {
-  //     console.log(err);
-  //     // abre um modal de erro
-  //     alert('Usuário ou senha inválidos');
-  //   }
-  // };
-
   const onSignInPress = React.useCallback(async () => {
     if (!isLoaded) {
       return;
@@ -158,7 +138,7 @@ export default function Login() {
                   
 
         
-        <ButtonLogin title='Entrar' className='bg-[#90CAFF] w-4/12 mt-10 rounded-full py-2' onPress={onSignInPress} />
+        <ButtonLogin title='Entrar' className='bg-[#90CAFF] w-4/12 mt-10 rounded-full py-2 px-3' onPress={onSignInPress} />
       </Animated.View>
 
 
