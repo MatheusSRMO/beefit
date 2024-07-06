@@ -17,25 +17,29 @@ export default function Card({ isFocused, children, className, type }: CardProps
     <View
       className={clsx('w-[280px] h-[350px] rounded-3xl', className)}
       style={StyleSheet.flatten([
-        styles.card,
+        type !== 'description' && styles.otherCard,
+        type === 'description' && styles.descriptionCard,
         isFocused && styles.focusedCard,
         { backgroundColor },
       ])}
     >
       {children}
-      {/* {type === 'description' ? (
-        <View className='flex flex-col w-full h-full justify-center items-center'></View>
-      ) : (
-        <View className='flex flex-col justify-start'></View>
-      )} */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
+  otherCard: {
     marginHorizontal: 7.2,
     transform: [{ scale: 0.9 }],
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  descriptionCard: {
+    marginHorizontal: 7.2,
+    transform: [{ scale: 0.9 }],
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
   focusedCard: {
     transform: [{ scale: 1 }],

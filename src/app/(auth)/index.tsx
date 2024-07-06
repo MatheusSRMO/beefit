@@ -42,7 +42,7 @@ export default function Main() {
 
   return (
     <View className='w-full h-full flex items-center justify-center'>
-      <View className="flex flex-row items-center justify-center w-full px-5">
+      <View className="flex flex-row items-center justify-center w-full px-5 pt-10">
         <ProfileHeader firstName={aluno.firstName} lastName={aluno.lastName} url={aluno.url!} />
         <Icon
           name="bars"
@@ -55,13 +55,13 @@ export default function Main() {
         />
       </View>
 
-      <View className="flex my-auto p-5 w-full h-[70vh] rounded-3xl justify-between align-center items-center relative">
+      <View className="flex my-auto w-[90%] h-[60vh] rounded-3xl justify-center align-center items-center relative">
         <Image
           source={require('@/assets/images/bg-calendar.png')}
           className='absolute items-center w-full h-full rounded-3xl'
         />
 
-        <View className='w-full h-[50%] pt-24 justify-center align-center items-center'>
+        <View className='w-full h-[50%] justify-center items-center'>
           <Calendar
             onDayPress={(day: { dateString: string; }) => {
               router.push({
@@ -73,17 +73,17 @@ export default function Main() {
             }}
           />
           <ProgressOverview progress={2} total={target} />
-        </View>
+        </View> 
+      </View>
 
-        <View className="w-full justify-end align-center mb-16 px-10">
-          <ButtonLight
-            title="Treino"
-            className='bg-[#90CAFF] w-full'
-            onPress={() => {
-              router.push('./training');
-            }}
-          />
-        </View>
+      <View className="w-[90%] justify-end align-center mb-16">
+        <ButtonLight
+          title="Treino"
+          className='bg-[#90CAFF] w-full'
+          onPress={() => {
+            router.push('./training');
+          }}
+        />
       </View>
     </View>
   );

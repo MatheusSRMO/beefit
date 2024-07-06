@@ -47,7 +47,6 @@ export default function Training() {
                 <Card
                   isFocused={isFocused}
                   type={'end'}
-                  className='items-center align-center justify-center'
                 >
                   <Text className='text-white' style={{
                     textAlign: 'center',
@@ -73,7 +72,6 @@ export default function Training() {
                 </Card>
               ) : (
                 <Card
-                  className='justify-center items-center'
                   isFocused={isFocused} 
                   type={'default'}>
                   <VideoPlayer uri={item.exercicio.gifLink}/>

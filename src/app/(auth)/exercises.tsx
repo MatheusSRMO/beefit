@@ -24,11 +24,8 @@ export default function Exercises() {
     );
   }
 
-  console.log(Number(exercicio))
-
   const data = [...aluno.treinos[aluno.treinos.length - 1].exercicios, null];
   let exercise: any = null;
-
 
   return (
     <View className='flex-1 items-center justify-center'>
@@ -52,12 +49,12 @@ export default function Exercises() {
 
               {item === null ? (
                 <Card isFocused={false} type={'description'}>
-                  <View className='bg-[#775FD1] w-[90%] left-4 pl-3 py-3 rounded-3xl mt-5'>
+                  <View className='bg-[#775FD1] w-[90%] pl-3 py-3 rounded-3xl mt-5'>
                     <Text className='text-white' style={{ fontFamily: 'Roboto_500Medium', fontSize: 20 }}>
                       {exercise.exercicio.nome}
                     </Text>
                   </View>
-                  <Text className='text-white mt-3' style={{ left: 20, fontFamily: 'Roboto_400Regular', fontSize: 16 }}>
+                  <Text className='text-white mt-3' style={{ left: -30, fontFamily: 'Roboto_400Regular', fontSize: 16 }}>
                     {exercise.exercicio.series} séries | {exercise.exercicio.repeticoes} repetições {'\n'}carga: {exercise.exercicio.peso} kg
                   </Text>
                 </Card>
