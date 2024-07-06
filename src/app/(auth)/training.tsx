@@ -26,7 +26,8 @@ export default function Training() {
     );
   }
 
-  console.log(aluno.treinos);
+  // console.log(aluno.treinos);
+  const data = [...aluno.treinos[aluno.treinos.length - 1].exercicios, null];
 
   return (
     <View className='flex-1 items-center justify-center w-full relative'>
@@ -34,20 +35,18 @@ export default function Training() {
       <Image source={require('@/assets/images/loginBg.png')} className='absolute -top-20 -left-50 w-full ' resizeMode='stretch' />
 
       <Animated.FlatList
-        data={aluno.treinos[aluno.treinos.length - 1].exercicios}
+        data={data}
         horizontal
         style={styles.listContent}
         renderItem={({ item, index }) => {
           const isFocused = index === focusedIndex;
-
-          console.log(item.exercicio.gifLink);
 
           return (
             <View>
               {item === null ? (
                 <Card
                   isFocused={isFocused}
-                  type={'description'}
+                  type={'end'}
                   className='items-center align-center justify-center'
                 >
                   <Text className='text-white' style={{
@@ -68,23 +67,13 @@ export default function Training() {
                     title="Finalizar"
                     className='bg-[#4F99DD] w-[70%] px-2 py-3 mt-5'
                     onPress={() => {
-                      router.back();
+                      router.push('/');
                     }}
                   />
                 </Card>
               ) : (
-                <Card isFocused={isFocused} type={'description'} className='h-96'>
-
-                  {/* <MyCarousel
-                    image1={{
-                      source: {
-                        uri: item.exercicio.gifLink
-                      } as ImageSourcePropType
-                    }}
-                  /> */}
-                  {/* <View className='w-full h-full flex justify-center items-center'> */}
-                    <VideoPlayer uri={item.exercicio.gifLink}/>
-                  {/* </View> */}
+                <Card isFocused={isFocused} type={'default'} className='h-96'>
+                  <VideoPlayer uri={item.exercicio.gifLink}/>
                 </Card>
               )}
             </View>

@@ -16,7 +16,7 @@ export default function Card({ isFocused, children, className, type }: CardProps
 
   return (
     <View
-      className={clsx('w-[280px] rounded-3xl justify-center items-center ', className)}
+      className={clsx('w-[280px] h-[350px] rounded-3xl justify-center items-center ', className)}
       style={StyleSheet.flatten([
         styles.card,
         isFocused && styles.focusedCard,
