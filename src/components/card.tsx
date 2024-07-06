@@ -11,12 +11,11 @@ interface CardProps {
 
 export default function Card({ isFocused, children, className, type }: CardProps) {
 
-  // Definindo a cor de fundo com base no tipo ('default' ou 'exercise')
   const backgroundColor = type === 'default' ? '#FFFFFF' : '#21175C';
 
   return (
     <View
-      className={clsx('w-[280px] h-[350px] rounded-3xl justify-center items-center ', className)}
+      className={clsx('w-[280px] h-[350px] rounded-3xl', className)}
       style={StyleSheet.flatten([
         styles.card,
         isFocused && styles.focusedCard,
@@ -25,7 +24,7 @@ export default function Card({ isFocused, children, className, type }: CardProps
     >
       {children}
       {/* {type === 'description' ? (
-        <View className='flex flex-col w-full h-full'></View>
+        <View className='flex flex-col w-full h-full justify-center items-center'></View>
       ) : (
         <View className='flex flex-col justify-start'></View>
       )} */}

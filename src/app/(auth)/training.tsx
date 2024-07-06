@@ -15,7 +15,7 @@ const CARD_WIDTH = 280;
 export default function Training() {
   const [focusedIndex, setFocusedIndex] = React.useState(0);
   const scrollX = new Animated.Value(0);
-  const [exerciseId, setExerciseId] = React.useState<number | null>(null);
+  const [exerciseId, setExerciseId] = React.useState<number>();
   const aluno = React.useContext(AlunoContext);
 
   if (!aluno) {
@@ -72,9 +72,13 @@ export default function Training() {
                   />
                 </Card>
               ) : (
-                <Card isFocused={isFocused} type={'default'} className='h-96'>
+                <Card
+                  className='justify-center items-center'
+                  isFocused={isFocused} 
+                  type={'default'}>
                   <VideoPlayer uri={item.exercicio.gifLink}/>
                 </Card>
+                
               )}
             </View>
 
@@ -94,18 +98,16 @@ export default function Training() {
           setFocusedIndex(index);
         }}
       />
-      {true && (
-        <Button
-          className='absolute bottom-7 bg-[#4F99DD] w-8/12 p-2'
-          title='Iniciar'
-          onPress={() => {
-            router.push({
-              pathname: './exercises',
-              params: { exercicio: exerciseId },
-            });
-          }}
-        />
-      )}
+      <Button
+        className='absolute bottom-7 bg-[#4F99DD] w-8/12 p-2'
+        title='Iniciar'
+        onPress={() => {
+          router.push({
+            pathname: './exercises',
+            params: { exercicio: focusedIndex },
+          });
+        }}
+      />
     </View>
   );
 };

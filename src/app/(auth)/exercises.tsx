@@ -1,67 +1,70 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, Animated, Image, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Dimensions, Animated, Image } from 'react-native';
 import Button from '@/components/button';
 import Card from '@/components/card';
-import MyCarousel from '@/components/carousel';
-import { FA5Style } from '@expo/vector-icons/build/FontAwesome5';
 import { router, useLocalSearchParams } from 'expo-router';
-import axios from 'axios';
+import { AlunoContext } from '@/lib/aluno-context';
+import Loading from '../(public)/loading';
+import VideoPlayer from '@/components/video-player';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = 280;
 
 export default function Exercises() {
-  const [focusedIndex, setFocusedIndex] = useState(0);
   const scrollX = new Animated.Value(0);
   const { exercicio } = useLocalSearchParams();
-  const [exercise, setExercise] = useState<Exercicio | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [focusedIndex, setFocusedIndex] = useState(Number(exercicio));
+  const aluno = React.useContext(AlunoContext);
 
-  
+  if (!aluno) {
+    return (
+      <View className='flex-1 w-full h-full flex justify-center items-center'>
+        <Loading />
+      </View>
+    );
+  }
+
+  console.log(Number(exercicio))
+
+  const data = [...aluno.treinos[aluno.treinos.length - 1].exercicios, null];
+  let exercise: any = null;
+
+
   return (
     <View className='flex-1 items-center justify-center'>
-
       <Image source={require('@/assets/images/loginBg.png')} className='absolute -top-20 left-0 w-full' resizeMode='stretch' />
-      
+
       <Animated.FlatList
-        key={exercise?.id}
-        data={[
-          { nome: exercise?.nome, link: exercise?.gifLink, type: 'default' }, 
-          { nome: exercise?.nome, link: exercise?.gifLink, type: 'description' }]}
+        data={data}
         horizontal
         style={styles.listContent}
-        renderItem={({ item }) => {
+        renderItem={({ item, index }) => {
+          const isLastItem = index === data.length - 1;
+          if (item != null) exercise = item;
 
           return (
             <View style={{ marginTop: 5 }}>
-              { item.type === 'default' ? (
-                <Card isFocused={false} type={'default'}> 
-                  <MyCarousel
-                    image1={{ source: { uri: item.link } }}
-                  />
-                </Card> 
-              ) : (
-                <Card isFocused={false} type={'description'}> 
+              {Number(exercicio) === index && item !== null ? (
+                <Card className='justify-center items-center' isFocused={false} type={'default'}>
+                  <VideoPlayer uri={exercise.exercicio.gifLink} />
+                </Card>
+              ) : null}
+
+              {item === null ? (
+                <Card isFocused={false} type={'description'}>
                   <View className='bg-[#775FD1] w-[90%] left-4 pl-3 py-3 rounded-3xl mt-5'>
-                    <Text className='text-white' style={{
-                      fontFamily: 'Roboto_500Medium',
-                      fontSize: 20}}>
-                      {item.nome}
-                    </Text> 
+                    <Text className='text-white' style={{ fontFamily: 'Roboto_500Medium', fontSize: 20 }}>
+                      {exercise.exercicio.nome}
+                    </Text>
                   </View>
-                  <Text className='text-white mt-3 justify-ent bottom-0' style={{
-                    left: 20,
-                    fontFamily: 'Roboto_400Regular',
-                    fontSize: 16}}>
-                    3 séries | 8 a 12 repetições {'\n'}carga: 10 kg
+                  <Text className='text-white mt-3' style={{ left: 20, fontFamily: 'Roboto_400Regular', fontSize: 16 }}>
+                    {exercise.exercicio.series} séries | {exercise.exercicio.repeticoes} repetições {'\n'}carga: {exercise.exercicio.peso} kg
                   </Text>
-                </Card> 
-              )}   
+                </Card>
+              ) : null}
             </View>
           );
         }}
-        // keyExtractor={item => item.key}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: (width - CARD_WIDTH) / 2 }}
         snapToInterval={CARD_WIDTH + 20}
@@ -73,12 +76,9 @@ export default function Exercises() {
         }}
       />
 
-      <Button 
-        className='absolute bottom-7 bg-[#4F99DD] w-8/12 p-2' 
-        title='Finalizar' 
-        onPress={() => {
-          router.back();
-        }}/>
+      <Button className='absolute bottom-7 bg-[#4F99DD] w-8/12 p-2' title='Finalizar' onPress={() => {
+        router.back();
+      }} />
     </View>
   );
 }
@@ -100,10 +100,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 7.2,
     justifyContent: 'center',
     alignItems: 'center',
-    transform: [{ scale: 0.9 }], // cards levemente menores por padrão
+    transform: [{ scale: 0.9 }],
   },
   focusedCard: {
-    transform: [{ scale: 1 }], // card em foco maior
+    transform: [{ scale: 1 }],
   },
   cardText: {
     color: '#fff',
