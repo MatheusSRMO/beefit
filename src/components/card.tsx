@@ -1,7 +1,6 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import React from 'react';
 import clsx from 'clsx';
-import { cn } from '@/lib/utils';
 
 interface CardProps {
   children?: React.ReactNode;
@@ -25,11 +24,11 @@ export default function Card({ isFocused, children, className, type }: CardProps
       ])}
     >
       {children}
-      {type === 'description' ? (
+      {/* {type === 'description' ? (
         <View className='flex flex-col w-full h-full'></View>
       ) : (
         <View className='flex flex-col justify-start'></View>
-      )}
+      )} */}
     </View>
   );
 }

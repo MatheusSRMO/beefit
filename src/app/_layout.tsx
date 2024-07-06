@@ -42,7 +42,7 @@ const InitialLayout = ({ loading }: InitialLayoutProps) => {
     } else if (!isSignedIn) {
       router.replace('/(public)');
     }
-  }, [isSignedIn]);
+  }, [isSignedIn, isLoaded]);
 
   // se não estiver carregado, exibe o loading
   if (!isLoaded || loading) {
@@ -89,7 +89,7 @@ export default function Layout() {
   return (
     <ClerkProvider
       publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!}
-      // tokenCache={tokenCache}
+      tokenCache={tokenCache}
     >
       <SafeAreaView className="items-center justify-center w-full h-full bg-[#080835]">
         <InitialLayout loading={!fontsLoaded} />

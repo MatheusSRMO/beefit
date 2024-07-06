@@ -4,94 +4,62 @@ import MyCarousel from '@/components/carousel';
 import { router } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, Animated, ImageBackground, Image, Alert } from 'react-native';
-import axios from 'axios';
+import { AlunoContext } from '@/lib/aluno-context';
+import Loading from '@/components/loading';
+import VideoPlayer from '@/components/video-player';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = 280;
 
-const dataset = [
-  { key: '1', random: 1 },
-  { key: '2', random: 2 },
-  { key: '3', random: 3 },
-  { key: '4', random: 0 },
-];
-
-interface Treino {
-  id: number;
-  exercicios: number[];
-  aluno_id: number;
-}
 
 export default function Training() {
-  const [focusedIndex, setFocusedIndex] = useState(0);
-  // const [numExercises, setNumExercises] = useState(0);
-  // const [number, setNumber] = useState(1);
+  const [focusedIndex, setFocusedIndex] = React.useState(0);
   const scrollX = new Animated.Value(0);
-  const [treinos, setTreinos] = useState<Treino[]>([]);
-  // const [exercises, setExercises] = useState<Exercise[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  const [alunoId, setAlunoId] = useState<number | null>(null);
-  const [exerciseId, setExerciseId] = useState<number | null>(null);
+  const [exerciseId, setExerciseId] = React.useState<number | null>(null);
+  const aluno = React.useContext(AlunoContext);
 
+  if (!aluno) {
+    return (
+      <View className='flex-1 w-full h-full flex justify-center items-center'>
+        <Loading />
+      </View>
+    );
+  }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (alunoId === null) {
-        return;
-      }
-
-      setLoading(true);
-      try {
-        const response = await axios.get(`http://192.168.0.112:3000/api/aluno/treino/a?aluno_id=${alunoId}`);
-        const { body } = response.data;
-        setTreinos(body); 
-        setLoading(false);
-        console.log('Data fetched:', body);
-      } catch (error: any) {
-        setError(error);
-        setLoading(false);
-        if (!error.response) {
-          console.error('Network error:', error);
-          Alert.alert('Erro de Rede', 'Não foi possível conectar ao servidor. Verifique sua conexão de internet.');
-        } else {
-          console.error('Error response:', error.response);
-          Alert.alert('Erro', `Erro ao buscar dados: ${error.response.statusText}`);
-        }
-      }
-    };
-  
-    fetchData();
-  }, [alunoId]); 
-
-  const selectedTreino = treinos.find(treino => treino.id === 1);
+  console.log(aluno.treinos);
 
   return (
-    <View className='flex-1 items-center justify-center'>
+    <View className='flex-1 items-center justify-center w-full relative'>
 
       <Image source={require('@/assets/images/loginBg.png')} className='absolute -top-20 -left-50 w-full ' resizeMode='stretch' />
 
       <Animated.FlatList
-        data={selectedTreino?.exercicios}
+        data={aluno.treinos[aluno.treinos.length - 1].exercicios}
         horizontal
         style={styles.listContent}
         renderItem={({ item, index }) => {
           const isFocused = index === focusedIndex;
-          setExerciseId(item);
-          
+
+          console.log(item.exercicio.gifLink);
+
           return (
             <View>
-              { item === null ? (
-                <Card isFocused={isFocused} type={'end'} className='items-center align-center justify-center'>
+              {item === null ? (
+                <Card
+                  isFocused={isFocused}
+                  type={'description'}
+                  className='items-center align-center justify-center'
+                >
                   <Text className='text-white' style={{
-                      textAlign: 'center',
-                      fontFamily: 'Roboto_400Regular',
-                      fontSize: 16}}>
-                      Você ainda não completou todos {'\n'} os exercícios!
+                    textAlign: 'center',
+                    fontFamily: 'Roboto_400Regular',
+                    fontSize: 16
+                  }}>
+                    Você ainda não completou todos {'\n'} os exercícios!
                   </Text>
                   <Button
                     title="Voltar aos exercícios"
-                    className='bg-[#775FD1] w-[50%] w-[70%] px-2 py-3 mt-20'
+                    className='bg-[#775FD1] w-[70%] px-2 py-3 mt-20'
                     onPress={() => {
                       router.push('./training');
                     }}
@@ -105,15 +73,23 @@ export default function Training() {
                   />
                 </Card>
               ) : (
-                <Card isFocused={isFocused} type={'default'}>
-                    <MyCarousel
-                      image1={{ source: require('@/assets/gifs/exercicio1_animated.gif') }}
-                    />
+                <Card isFocused={isFocused} type={'description'} className='h-96'>
+
+                  {/* <MyCarousel
+                    image1={{
+                      source: {
+                        uri: item.exercicio.gifLink
+                      } as ImageSourcePropType
+                    }}
+                  /> */}
+                  {/* <View className='w-full h-full flex justify-center items-center'> */}
+                    <VideoPlayer uri={item.exercicio.gifLink}/>
+                  {/* </View> */}
                 </Card>
               )}
             </View>
-            
-            
+
+
           );
         }}
         showsHorizontalScrollIndicator={false}
@@ -129,7 +105,7 @@ export default function Training() {
           setFocusedIndex(index);
         }}
       />
-      {selectedTreino?.exercicios !== null && (
+      {true && (
         <Button
           className='absolute bottom-7 bg-[#4F99DD] w-8/12 p-2'
           title='Iniciar'

@@ -10,52 +10,14 @@ import axios from 'axios';
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = 280;
 
-const data = [
-  { key: '1', random: 1 },
-  { key: '2', random: 1 },
-];
-
-interface Exercise {
-  id: number;
-  nome: string;
-  gifLink: string;
-}
-
 export default function Exercises() {
   const [focusedIndex, setFocusedIndex] = useState(0);
   const scrollX = new Animated.Value(0);
   const { exercicio } = useLocalSearchParams();
-  const [exercise, setExercise] = useState<Exercise | null>(null);
+  const [exercise, setExercise] = useState<Exercicio | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get(`http://localhost:3000/api/treino/a?id=${exercicio}`);
-        const { body } = response.data;
-        setExercise(body); 
-        setLoading(false);
-        console.log('Data fetched:', body);
-      } catch (error: any) {
-        setError(error);
-        setLoading(false);
-        if (!error.response) {
-          console.error('Network error:', error);
-          Alert.alert('Erro de Rede', 'Não foi possível conectar ao servidor. Verifique sua conexão de internet.');
-        } else {
-          console.error('Error response:', error.response);
-          Alert.alert('Erro', `Erro ao buscar dados: ${error.response.statusText}`);
-        }
-      }
-    };
-  
-    fetchData();
-  }, [exercicio]); 
-
-    
   
   return (
     <View className='flex-1 items-center justify-center'>

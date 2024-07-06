@@ -14,7 +14,7 @@ export default function Button({ title, icon, onPress, className }: ButtonProps)
     <TouchableOpacity className={
       cn(
         'bg-primary',
-        // 'p-4',
+        'p-4',
         'rounded-2xl',
         'flex',
         'items-center',
