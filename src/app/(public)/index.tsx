@@ -25,7 +25,7 @@ export default function Home() {
       <View className='w-full flex-1 items-center justify-center'>
         <Button
           title="Login"
-          className='bg-[#4F99DD] w-9/12'
+          className='bg-[#4F99DD] w-9/12 py-2'
           onPress={() => {
             router.push('./login')
           }}

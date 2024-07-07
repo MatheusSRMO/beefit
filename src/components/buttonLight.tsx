@@ -1,12 +1,12 @@
 import { cn } from '@/lib/utils'
 import React from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Text, TouchableOpacity } from 'react-native'
 
 interface ButtonProps {
-    icon?: React.ReactNode
-    title?: string
-    onPress?: () => void,
-    className?: string
+  icon?: React.ReactNode
+  title?: string
+  onPress?: () => void,
+  className?: string
 }
 
 export default function ButtonLight({ title, icon, onPress, className }: ButtonProps) {
@@ -22,15 +22,17 @@ export default function ButtonLight({ title, icon, onPress, className }: ButtonP
         className
       )
     } onPress={onPress}>
-        {/* Renderiza um icone se tiver */}
-        {icon && icon}
-        <Text style={{
-                // left: 0,
-                fontFamily: 'Roboto_700Bold',
-                fontSize: 36
-            }} 
-            className='text-[#080835] py-2 rounded-2xl'>{title}
-        </Text>
+      {/* Renderiza um icone se tiver */}
+      {icon && icon}
+      <Text 
+        style={{
+          fontFamily: 'Roboto_700Bold',
+          fontSize: 36
+        }}
+        className='text-[#080835] py-2 rounded-2xl'
+      >
+        {title}
+      </Text>
     </TouchableOpacity>
   )
 }

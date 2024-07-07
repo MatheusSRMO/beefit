@@ -1,15 +1,21 @@
+import LottieView from 'lottie-react-native';
 import React from 'react';
-import { View, ActivityIndicator, StyleSheet, Text } from 'react-native';
 
 interface LoadingProps {
   size?: 'small' | 'large',
-} 
+}
 
 export default function Loading({ size = 'large' }: LoadingProps) {
 
   return (
-    <View className='flex-1 items-center justify-center'>
-      <ActivityIndicator size={size} color="#FFDC98" />
-    </View>
+    <LottieView
+      source={require('../assets/animations/loader_yellow.json')}
+      autoPlay
+      loop
+      style={{
+        width: size === 'small' ? 100 : 200,
+        height: size === 'small' ? 100 : 200,
+      }}
+    />
   );
 };

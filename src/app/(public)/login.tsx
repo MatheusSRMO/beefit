@@ -7,7 +7,6 @@ import { useSignIn } from "@clerk/clerk-expo";
 import ButtonLight from '@/components/buttonLight';
 import ButtonLogin from '@/components/buttonLogin';
 
-
 export default function Login() {
   const { signIn, setActive, isLoaded } = useSignIn();
 
@@ -76,7 +75,7 @@ export default function Login() {
     };
   }, []);
 
-  const onSignInPress = async () => {
+  const onSignInPress = React.useCallback(async () => {
     if (!isLoaded) {
       return;
     }
@@ -86,15 +85,14 @@ export default function Login() {
         identifier: username,
         password,
       });
-      // This is an important step,
-      // This indicates the user is signed in
       await setActive({ session: completeSignIn.createdSessionId });
+
     } catch (err: any) {
-      console.log(err);
-      // abre um modal de erro
+      console.error(err);
       alert('Usuário ou senha inválidos');
     }
-  };
+  }, [isLoaded, username, password]);
+
   return (
     <View className='w-full h-full flex-1 items-center justify-center'>
        <Animated.Image source={require('@/assets/images/loginBg.png')} className='absolute left-0 w-full' style={{
@@ -140,7 +138,7 @@ export default function Login() {
                   
 
         
-        <ButtonLogin title='Entrar' className='bg-[#90CAFF] w-4/12 mt-10 rounded-full py-2' onPress={onSignInPress} />
+        <ButtonLogin title='Entrar' className='bg-[#90CAFF] w-4/12 mt-10 rounded-full py-2 px-3' onPress={onSignInPress} />
       </Animated.View>
 
 

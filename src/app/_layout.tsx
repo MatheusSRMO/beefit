@@ -42,15 +42,12 @@ const InitialLayout = ({ loading }: InitialLayoutProps) => {
     } else if (!isSignedIn) {
       router.replace('/(public)');
     }
-  }, [isSignedIn]);
+  }, [isSignedIn, isLoaded]);
 
   // se não estiver carregado, exibe o loading
   if (!isLoaded || loading) {
     return <Loading />;
   }
-  // if (isLoaded || loading) {
-  //   return <Loading />;
-  // }
 
   return <Slot />; // exibe o slot (rota atual)
 };

@@ -1,68 +1,81 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, Animated, Image } from 'react-native';
 import Button from '@/components/button';
 import Card from '@/components/card';
-import MyCarousel from '@/components/carousel';
-import { FA5Style } from '@expo/vector-icons/build/FontAwesome5';
 import { router, useLocalSearchParams } from 'expo-router';
-
+import { AlunoContext } from '@/lib/aluno-context';
+import Loading from '../(public)/loading';
+import VideoPlayer from '@/components/video-player';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = 280;
 
-const data = [
-  { key: '1', random: 1 },
-  { key: '2', random: 1 },
-];
-
 export default function Exercises() {
-  const [focusedIndex, setFocusedIndex] = useState(0);
   const scrollX = new Animated.Value(0);
-  const { numExercises } = useLocalSearchParams();
+  const { exercicio } = useLocalSearchParams();
+  const [focusedIndex, setFocusedIndex] = useState(Number(exercicio));
+  const aluno = React.useContext(AlunoContext);
 
-  const numCards = typeof numExercises === 'string' ? parseInt(numExercises) : 1;
-  console.log(numCards);
+  if (!aluno) {
+    return (
+      <View className='flex-1 w-full h-full flex justify-center items-center'>
+        <Loading />
+      </View>
+    );
+  }
 
-  // Array de quantidade de carrosséis baseado em numExercises
-  const carousels = Array.from({ length: numCards }, (_, index) => (
-    <Animated.FlatList
-      key={index.toString()}
-      data={data}
-      horizontal
-      style={styles.listContent}
-      renderItem={({ item, index }) => {
-        const random = item.random;
-        const type = index === 0 ? 'default' : 'exercise';
-        return (
-          <View style={{ marginTop: 5 }}>
-              <Card isFocused={false} group={numCards} type={type} />           
-          </View>
-        );
-      }}
-      keyExtractor={item => item.key}
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{ paddingHorizontal: (width - CARD_WIDTH) / 2 }}
-      snapToInterval={CARD_WIDTH + 20}
-      decelerationRate="fast"
-      onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false })}
-      onMomentumScrollEnd={event => {
-        const index = Math.round(event.nativeEvent.contentOffset.x / (CARD_WIDTH + 20));
-        setFocusedIndex(index);
-      }}
-    />
-  ));
-  
+  const data = [...aluno.treinos[aluno.treinos.length - 1].exercicios, null];
+  let exercise: any = null;
+
   return (
     <View className='flex-1 items-center justify-center'>
-
       <Image source={require('@/assets/images/loginBg.png')} className='absolute -top-20 left-0 w-full' resizeMode='stretch' />
-      {carousels}
-      <Button 
-        className='absolute bottom-7 bg-[#4F99DD] w-8/12 p-2' 
-        title='Finalizar' 
-        onPress={() => {
-          router.back();
-        }}/>
+
+      <Animated.FlatList
+        data={data}
+        horizontal
+        style={styles.listContent}
+        renderItem={({ item, index }) => {
+          const isLastItem = index === data.length - 1;
+          if (item != null) exercise = item;
+
+          return (
+            <View style={{ marginTop: 5 }}>
+              {Number(exercicio) === index && item !== null ? (
+                <Card className='justify-center items-center' isFocused={false} type={'default'}>
+                  <VideoPlayer uri={exercise.exercicio.gifLink} />
+                </Card>
+              ) : null}
+
+              {item === null ? (
+                <Card isFocused={false} type={'description'}>
+                  <View className='bg-[#775FD1] w-[90%] pl-3 py-3 rounded-3xl mt-5'>
+                    <Text className='text-white' style={{ fontFamily: 'Roboto_500Medium', fontSize: 20 }}>
+                      {exercise.exercicio.nome}
+                    </Text>
+                  </View>
+                  <Text className='text-white mt-3' style={{ left: -30, fontFamily: 'Roboto_400Regular', fontSize: 16 }}>
+                    {exercise.exercicio.series} séries | {exercise.exercicio.repeticoes} repetições {'\n'}carga: {exercise.exercicio.peso} kg
+                  </Text>
+                </Card>
+              ) : null}
+            </View>
+          );
+        }}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingHorizontal: (width - CARD_WIDTH) / 2 }}
+        snapToInterval={CARD_WIDTH + 20}
+        decelerationRate="fast"
+        onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false })}
+        onMomentumScrollEnd={event => {
+          const index = Math.round(event.nativeEvent.contentOffset.x / (CARD_WIDTH + 20));
+          setFocusedIndex(index);
+        }}
+      />
+
+      <Button className='absolute bottom-7 bg-[#4F99DD] w-8/12 p-2' title='Finalizar' onPress={() => {
+        router.back();
+      }} />
     </View>
   );
 }
@@ -84,10 +97,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 7.2,
     justifyContent: 'center',
     alignItems: 'center',
-    transform: [{ scale: 0.9 }], // cards levemente menores por padrão
+    transform: [{ scale: 0.9 }],
   },
   focusedCard: {
-    transform: [{ scale: 1 }], // card em foco maior
+    transform: [{ scale: 1 }],
   },
   cardText: {
     color: '#fff',

@@ -4,27 +4,18 @@ import LottieView from 'lottie-react-native';
 
 const Loader = () => {
   return (
-    <View style={styles.container}>
+    <View className='flex-1 justify-center items-center'>
       <LottieView
         source={require('../../assets/animations/loader_yellow.json')}
         autoPlay
         loop
-        style={styles.lottie}
+        style={{
+          width: 200,
+          height: 200,
+        }}
       />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  lottie: {
-    width: 200,
-    height: 200,
-  },
-});
 
 export default Loader;

@@ -1,82 +1,90 @@
-import { View, ScrollView, Image } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import Calendar from '@/components/calendar';
-import ProgressOverview from '@/components/progressOverview';
-import ProfileHeader from '@/components/profileHeader';
+import React from 'react';
 import { useRouter } from 'expo-router';
+import Calendar from '@/components/calendar';
+import { View, Image, Text } from 'react-native';
+import { AlunoContext } from '@/lib/aluno-context';
 import ButtonLight from '@/components/buttonLight';
+import ProfileHeader from '@/components/profileHeader';
 import Icon from 'react-native-vector-icons/FontAwesome';
-// import Gesture from 'react-native-swipe-gesture-handler';
-import { SwipeGesture } from "react-native-swipe-gesture-handler";
-import { onSwipePerformed } from '@/lib/utils'
+import ProgressOverview from '@/components/progressOverview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Loading from '@/components/loading';
 
 
 export default function Main() {
-  const [target, setTarget] = useState(0);
   const router = useRouter();
 
-  const loadTarget = async () => {
-    try {
-      const value = await AsyncStorage.getItem('@target');
-      if (value !== null) {
-        setTarget(parseInt(value, 10));
-      }
-    } catch (e) {
-      console.error('Failed to fetch the data from storage', e);
-    }
-  };
+  const [target, setTarget] = React.useState<number>(0);
+  const aluno = React.useContext(AlunoContext);
 
-  useEffect(() => {
-    loadTarget();
+  React.useEffect(() => {
+    (
+      async () => {
+        try {
+          const value = await AsyncStorage.getItem('@target');
+          if (value !== null) {
+            setTarget(parseInt(value, 10));
+          }
+        } catch (e) {
+          console.error('Failed to fetch the data from storage', e);
+        }
+      }
+    )();
   }, []);
 
+  if(!aluno) {
+    return (
+      <View className='flex-1 w-full h-full flex justify-center items-center'>
+        <Loading />
+      </View>
+    );
+  }
+
   return (
-    <View className='w-full h-full flex items-center'>
-      <SwipeGesture onSwipePerformed={onSwipePerformed}>
-        <View className="flex flex-row items-center justify-center w-[90%]">
-          <ProfileHeader name='Matheus' lastName='Souza Ribeiro' imageSource='https://github.com/MatheusSRMO.png' />
-          <Icon
-            name="bars"
-            size={30}
-            color="#FFDC98"
-            onPress={() => {
-              router.push('./settings');
+    <View className='w-full h-full flex items-center justify-center'>
+      <View className="flex flex-row items-center justify-center w-full px-5 pt-10">
+        <ProfileHeader firstName={aluno.firstName} lastName={aluno.lastName} url={aluno.url!} />
+        <Icon
+          name="bars"
+          size={30}
+          color="#FFDC98"
+          className='pt-10'
+          onPress={() => {
+            router.push('./settings');
+          }}
+        />
+      </View>
+
+      <View className="flex my-auto w-[90%] h-[60vh] rounded-3xl justify-center align-center items-center relative">
+        <Image
+          source={require('@/assets/images/bg-calendar.png')}
+          className='absolute items-center w-full h-full rounded-3xl'
+        />
+
+        <View className='w-full h-[50%] justify-center items-center'>
+          <Calendar
+            onDayPress={(day: { dateString: string; }) => {
+              router.push({
+                pathname: './exercises',
+                params: {
+                  date: day.dateString,
+                },
+              });
             }}
           />
-        </View>
+          <ProgressOverview progress={2} total={target} />
+        </View> 
+      </View>
 
-        <View className="flex my-10 w-[90%] h-[100%] rounded-3xl justify-center align-center items-center">
-          <Image
-            source={require('@/assets/images/bg-calendar.png')}
-            className='absolute items-center w-full h-[50%] top-0 left-0 right-0 bottom-0 rounded-3xl'
-          />
-
-          <View className='absolute w-full h-[50%] justify-center align-center items-center left-0 top-0'>
-            <Calendar
-              onDayPress={(day: { dateString: string; }) => {
-                router.push({
-                  pathname: './training',
-                  params: {
-                    date: day.dateString,
-                  },
-                });
-              }}
-            />
-            <ProgressOverview progress={2} total={target}/>
-          </View>
-
-          <View className="absolute w-full justify-end align-center left-0 pt-[60%] pb-10">
-            <ButtonLight
-              title="Treino"
-              className='bg-[#90CAFF] w-full'
-              onPress={() => {
-                router.push('./training');
-              }}
-            />
-          </View>
-        </View>
-      </SwipeGesture>
+      <View className="w-[90%] justify-end align-center mb-16">
+        <ButtonLight
+          title="Treino"
+          className='bg-[#90CAFF] w-full'
+          onPress={() => {
+            router.push('./training');
+          }}
+        />
+      </View>
     </View>
   );
 }

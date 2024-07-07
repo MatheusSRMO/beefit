@@ -1,61 +1,54 @@
 import Button from '@/components/button';
 import Card from '@/components/card';
-import MyCarousel from '@/components/carousel';
 import { router } from 'expo-router';
-import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, Animated, ImageBackground, Image } from 'react-native';
+import React, { useState, useContext, useEffect } from 'react';
+import { View, Text, StyleSheet, Dimensions, Animated, Image } from 'react-native';
+import { AlunoContext } from '@/lib/aluno-context';
+import Loading from '@/components/loading';
+import VideoPlayer from '@/components/video-player';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = 280;
 
-const data = [
-  { key: '1', random: 1 },
-  { key: '2', random: 2 },
-  { key: '3', random: 3 },
-  { key: '4', random: 0 },
-  
-];
-
 export default function Training() {
   const [focusedIndex, setFocusedIndex] = useState(0);
-  const [lastIndex, setLastIndex] = useState(0);
-  const [numExercises, setNumExercises] = useState(0);
   const scrollX = new Animated.Value(0);
+  const [selectedExercise, setSelectedExercise] = useState<TreinoExercicio | null>(null);
+  const aluno = useContext(AlunoContext);
 
+  if (!aluno) {
+    return (
+      <View className='flex-1 w-full h-full flex justify-center items-center'>
+        <Loading />
+      </View>
+    );
+  }
 
-  useEffect(() => {
-    if (focusedIndex < data.length) {
-      setNumExercises(data[focusedIndex].random);
-    }
-  }, [focusedIndex]);
-
+  const data = [...aluno.treinos[aluno.treinos.length - 1].exercicios, null];
+  const isEndCard = data[focusedIndex] === null;
 
   return (
-    <View className='flex-1 items-center justify-center'>
-
-      <Image source={require('@/assets/images/loginBg.png')} className='absolute -top-20 left-0 w-full ' resizeMode='stretch' />
+    <View className='flex-1 items-center justify-center w-full relative'>
+      <Image source={require('@/assets/images/loginBg.png')} className='absolute -top-20 -left-50 w-full ' resizeMode='stretch' />
 
       <Animated.FlatList
         data={data}
         horizontal
         style={styles.listContent}
         renderItem={({ item, index }) => {
-          const random = item.random;
           const isFocused = index === focusedIndex;
+          setSelectedExercise(item);
 
           return (
             <View>
-              { random === 0 ? (
-                <Card isFocused={isFocused} group={1} type={'end'} className='items-center align-center justify-center'>
-                  <Text className='text-white' style={{
-                      textAlign: 'center',
-                      fontFamily: 'Roboto_400Regular',
-                      fontSize: 16}}>
-                      Você ainda não completou todos {'\n'} os exercícios!
+              {item === null ? (
+                <Card isFocused={isFocused} type={'end'}>
+                  <Text className='text-white' style={{ textAlign: 'center', fontFamily: 'Roboto_400Regular', fontSize: 16 }}>
+                    Você ainda não completou todos {'\n'} os exercícios!
                   </Text>
                   <Button
                     title="Voltar aos exercícios"
-                    className='bg-[#775FD1] w-[50%] w-[70%] px-2 py-3 mt-20'
+                    className='bg-[#775FD1] w-[70%] px-2 py-3 mt-20'
                     onPress={() => {
                       router.push('./training');
                     }}
@@ -64,42 +57,21 @@ export default function Training() {
                     title="Finalizar"
                     className='bg-[#4F99DD] w-[70%] px-2 py-3 mt-5'
                     onPress={() => {
-                      router.back();
+                      router.push('/');
                     }}
                   />
                 </Card>
               ) : (
-                <Card isFocused={isFocused} group={1} type={'default'}>
-                  {random === 1 && (
-                    <MyCarousel
-                      image1={{ source: require('@/assets/gifs/exercicio1_animated.gif') }}
-                    />
-                  )}
-                  {random === 2 && (
-                    <MyCarousel
-                      image1={{ source: require('@/assets/gifs/exercicio1_animated.gif') }}
-                      image2={{ source: require('@/assets/gifs/exercicio2_animated.gif') }}
-                    />
-                  )}
-                  {random === 3 && (
-                    <MyCarousel
-                      image1={{ source: require('@/assets/gifs/exercicio1_animated.gif') }}
-                      image2={{ source: require('@/assets/gifs/exercicio2_animated.gif') }}
-                      image3={{ source: require('@/assets/gifs/exercicio3_animated.gif') }}
-                    />
-                  )}
+                <Card isFocused={isFocused} type={'default'}>
+                  <VideoPlayer uri={item.exercicio.gifLink} />
                 </Card>
               )}
-
             </View>
-            
-            
           );
         }}
-        keyExtractor={item => item.key}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: (width - CARD_WIDTH) / 2, }}
-        snapToInterval={CARD_WIDTH + 20} // largura do card + margem
+        contentContainerStyle={{ paddingHorizontal: (width - CARD_WIDTH) / 2 }}
+        snapToInterval={CARD_WIDTH + 20}
         decelerationRate="fast"
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { x: scrollX } } }],
@@ -108,24 +80,24 @@ export default function Training() {
         onMomentumScrollEnd={event => {
           const index = Math.round(event.nativeEvent.contentOffset.x / (CARD_WIDTH + 20));
           setFocusedIndex(index);
-          setLastIndex(index-1);
         }}
       />
-      {numExercises !== 0 && (
+
+      {!isEndCard && (
         <Button
           className='absolute bottom-7 bg-[#4F99DD] w-8/12 p-2'
           title='Iniciar'
           onPress={() => {
             router.push({
               pathname: './exercises',
-              params: { numExercises },
+              params: { exercicio: focusedIndex },
             });
           }}
         />
       )}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -139,16 +111,15 @@ const styles = StyleSheet.create({
   },
   card: {
     width: CARD_WIDTH,
-    // backgroundColor: '#90CAFF',
     height: 400,
     borderRadius: 20,
     marginHorizontal: 7.2,
     justifyContent: 'center',
     alignItems: 'center',
-    transform: [{ scale: 0.9 }], // cards levemente menores por padrão
+    transform: [{ scale: 0.9 }],
   },
   focusedCard: {
-    transform: [{ scale: 1 }], // card em foco maior
+    transform: [{ scale: 1 }],
   },
   cardText: {
     color: '#fff',
@@ -167,4 +138,3 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
-
