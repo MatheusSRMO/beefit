@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import Calendar from '@/components/calendar';
 import { View, Image, Text } from 'react-native';
@@ -13,9 +13,16 @@ import Loading from '@/components/loading';
 
 export default function Main() {
   const router = useRouter();
-
+  const [progress, setProgress] = React.useState(0);
   const [target, setTarget] = React.useState<number>(0);
   const aluno = React.useContext(AlunoContext);
+
+  useEffect(() => {
+    if (aluno) {
+      const treinosFinalizados = aluno.treinos.filter(treino => treino.finalizado === true).length;
+      setProgress(treinosFinalizados);
+    }
+  }, [aluno]);
 
   React.useEffect(() => {
     (
@@ -72,7 +79,7 @@ export default function Main() {
               });
             }}
           />
-          <ProgressOverview progress={2} total={target} />
+          <ProgressOverview progress={progress} total={target} />
         </View> 
       </View>
 

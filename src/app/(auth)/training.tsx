@@ -7,6 +7,7 @@ import { AlunoContext } from '@/lib/aluno-context';
 import Loading from '@/components/loading';
 import VideoPlayer from '@/components/video-player';
 import { TreinoContext } from '@/lib/treino-context';
+import axios from 'axios';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = 280;
@@ -14,7 +15,7 @@ const CARD_WIDTH = 280;
 export default function Training() {
   const [focusedIndex, setFocusedIndex] = useState(0);
   const scrollX = new Animated.Value(0);
-  const aluno = useContext(AlunoContext);
+  const aluno  = useContext(AlunoContext);
   const { exercisesDone } = useContext(TreinoContext);
 
   if (!aluno) {
@@ -25,7 +26,21 @@ export default function Training() {
     );
   }
 
-  console.log(exercisesDone)
+  const finalizarTreino = async () => {
+    if (aluno) {
+      try {
+        const treinoId = aluno.treinos[aluno.treinos.length - 1].id;     
+        const url = `https://beefit-admin.vercel.app/api/treino/${treinoId}`;
+        console.log(url);
+        const finalizado = await axios.put(url);
+        console.log(finalizado.data);
+
+      } catch (error) {
+        console.error('Erro ao atualizar treino:', error);
+      }
+    }
+  };
+
 
   const data = [...aluno.treinos[aluno.treinos.length - 1].exercicios, null];
   const isEndCard = data[focusedIndex] === null;
@@ -65,7 +80,7 @@ export default function Training() {
             );
           }
 
-          if (item === null && exercisesDone === aluno.treinos[aluno.treinos.length - 1].exercicios.length) {
+          if (item === null && exercisesDone >= aluno.treinos[aluno.treinos.length - 1].exercicios.length) {
             return (
               <Card isFocused={isFocused} type={'end'}>
                 <Text className='text-white' style={{ textAlign: 'center', fontFamily: 'Roboto_400Regular', fontSize: 16 }}>
@@ -75,6 +90,7 @@ export default function Training() {
                   title="Finalizar"
                   className='bg-[#4F99DD] w-[70%] px-2 py-3 mt-5'
                   onPress={() => {
+                    finalizarTreino();
                     router.push('/');
                   }}
                 />

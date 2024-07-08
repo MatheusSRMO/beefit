@@ -32,28 +32,6 @@ const AlunoProvider = ({ children }: { children: React.ReactNode }) => {
     )();
   }, [isLoaded, isSignedIn, userId]);
 
-  // if (!aluno) {
-  //   (
-  //     async () => {
-  //       if (!isLoaded) return;
-
-  //       console.log(userId);
-
-  //       const url = `https://beefit-admin.vercel.app/api/aluno/${userId}`;
-  //       const response = await axios.get(url);
-
-  //       console.log(response.data)
-
-  //       if (response.data.status !== 200) {
-  //         console.error('Failed to fetch the data from the server');
-  //         return;
-  //       }
-
-  //       setAluno(response.data.body);
-  //     }
-  //   )();
-  // }
-
   return (
     <AlunoContext.Provider value={aluno}>
       {children}
