@@ -85,7 +85,7 @@ export default function Main() {
         </View> 
       </View>
 
-      <View className="w-[90%] justify-end align-center mb-16">
+      <View className="w-[90%] justify-end align-center mb-10">
         <ButtonLight
           title="Treino"
           className='bg-[#90CAFF] w-full'
