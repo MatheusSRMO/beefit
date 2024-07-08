@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import Calendar from '@/components/calendar';
 import { View, Image, Text } from 'react-native';
@@ -13,9 +13,16 @@ import Loading from '@/components/loading';
 
 export default function Main() {
   const router = useRouter();
-
+  const [progress, setProgress] = React.useState(0);
   const [target, setTarget] = React.useState<number>(0);
-  const aluno = React.useContext(AlunoContext);
+  const {aluno, atualizaAluno} = React.useContext(AlunoContext);
+
+  useEffect(() => {
+    if (aluno) {
+      const treinosFinalizados = aluno.treinos.filter(treino => treino.finalizado === true).length;
+      setProgress(treinosFinalizados);
+    }
+  }, [aluno]);
 
   React.useEffect(() => {
     (
@@ -64,15 +71,17 @@ export default function Main() {
         <View className='w-full h-[50%] justify-center items-center'>
           <Calendar
             onDayPress={(day: { dateString: string; }) => {
-              router.push({
-                pathname: './exercises',
-                params: {
-                  date: day.dateString,
-                },
-              });
+              // router.push({
+              //   pathname: './exercises',
+              //   params: {
+              //     date: day.dateString,
+              //   },
+              // });
+              console.log(day);
+              
             }}
           />
-          <ProgressOverview progress={2} total={target} />
+          <ProgressOverview progress={progress} total={target} />
         </View> 
       </View>
 
@@ -80,8 +89,13 @@ export default function Main() {
         <ButtonLight
           title="Treino"
           className='bg-[#90CAFF] w-full'
-          onPress={() => {
-            router.push('./training');
+          onPress={ async () => {
+            await atualizaAluno()
+            aluno.treinos.forEach((treino) => {
+              if(!treino.finalizado) {
+                router.push('./training');
+              }
+            })
           }}
         />
       </View>

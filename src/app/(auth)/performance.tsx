@@ -1,5 +1,5 @@
 import { View, Image, Animated, Text, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, ScrollView, } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { router } from "expo-router";
 import ButtonLight from "@/components/buttonLight"
 import ProfileHeader from "@/components/profileHeader";
@@ -10,20 +10,31 @@ import { onSwipePerformed } from '@/lib/utils'
 import ProgressOverview from '@/components/progressOverview';
 import TextInput from '@/components/textInput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AlunoContext } from '@/lib/aluno-context';
 
 
 
-export default function Settings() {
+export default function Performance() {
   const [target, setTarget] = React.useState('');
-  const [progress, setProgress] = React.useState('');
+  const [progress, setProgress] = React.useState(0);
   const [showNumDays, setShowNumDays] = React.useState(false);
+  const aluno = useContext(AlunoContext);
+
+  useEffect(() => {
+    if (aluno) {
+      const treinosFinalizados = aluno.treinos.filter(treino => treino.finalizado === true).length;
+      setProgress(treinosFinalizados);
+    }
+  }, [aluno]);
+
+  console.log(progress);
 
   const calculatePercentage = (progress: number, target: number): number => {
     if (target === 0) return 0;
     return Math.min((progress / target) * 100, 100);
   };
 
-  const percentage = calculatePercentage(parseInt(progress) || 0, parseInt(target) || 0);
+  const percentage = calculatePercentage(progress || 0, parseInt(target) || 0);
 
   const saveTarget = async (value: string) => {
     try {
@@ -98,7 +109,7 @@ export default function Settings() {
                 />
 
                 <View className='absolute w-full h-[50%] items-center justify-center left-5 top-0'>
-                  <ProgressOverview progress={2} total={parseInt(target) || 0} />
+                  <ProgressOverview progress={progress} total={parseInt(target) || 0} />
                 </View>
               </View>
 

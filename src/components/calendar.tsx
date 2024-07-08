@@ -1,3 +1,4 @@
+import { AlunoContext } from '@/lib/aluno-context';
 import React, { useState } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { LocaleConfig, Calendar as RNCalendar } from 'react-native-calendars';
@@ -62,27 +63,34 @@ interface CalendarProps {
 
 export default function Calendar({ onDayPress }: CalendarProps) {
   const [selectedDate, setSelectedDate] = useState(['']);
+  const {aluno} = React.useContext(AlunoContext);
 
-  // const onDayPress = (day: { dateString: string; }) => {
-  //   // Aqui é onde você vai fazer o que quiser com a data selecionada, tu vai puxar as datas da api e colocar no array selectedDate 🙂
-  //   setSelectedDate(prev => [...prev, day.dateString]);
-  // };
+  if ( !aluno ) {
+    return null;
+  }
 
+  const formatDate = (date: Date) => {
+    return date.toString().split("T")[0];
+  }
+
+  console.log({...aluno.treinos.reduce((acc, treino) => ({ ...acc, [formatDate(treino.updatedAt)]: { selected: true, marked: false, selectedColor: '#080835' } }), {})});
+  
   return (
     <RNCalendar
       onDayPress={onDayPress}
       markingType="custom"
       markedDates={{
-        ...selectedDate.reduce((acc, date) => ({ ...acc, [date]: { selected: true, marked: false, selectedColor: '#080835' } }), {})
+        // ...selectedDate.reduce((acc, date) => ({ ...acc, [date]: { selected: true, marked: false, selectedColor: '#080835' } }), {})
+        ...aluno.treinos.reduce((acc, treino) => ({ ...acc, [formatDate(treino.updatedAt)]: { selected: true, marked: false, selectedColor: '#080835' } }), {}) 
       }}
-      theme={{
+      theme={{                     
         backgroundColor: '#4F99DD',
         calendarBackground: '#4F99DD',
         textSectionTitleColor: 'white',
         selectedDayBackgroundColor: '#080835',
         selectedDayTextColor: '#fff',
         todayTextColor: 'white',
-        todayBackgroundColor: '#080835',
+        todayBackgroundColor: '#192C64',
         dayTextColor: 'white',
         textDisabledColor: '#d9e1e8',
         dotColor: '#00adf5',
@@ -135,10 +143,10 @@ export default function Calendar({ onDayPress }: CalendarProps) {
       }}
 
       // markingType={'period'}
-      renderArrow={direction => (
+      renderArrow={(direction: any) => (
         <Text className='text-white text-2xl'>{direction === 'left' ? '<' : '>'}</Text>
       )}
-      renderHeader={date => (
+      renderHeader={(date: any) => (
         <Text className='text-white font-bold text-2xl'>{date.toString('MMMM yyyy')}</Text>
       )}
     />

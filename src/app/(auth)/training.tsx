@@ -6,6 +6,8 @@ import { View, Text, StyleSheet, Dimensions, Animated, Image } from 'react-nativ
 import { AlunoContext } from '@/lib/aluno-context';
 import Loading from '@/components/loading';
 import VideoPlayer from '@/components/video-player';
+import { TreinoContext } from '@/lib/treino-context';
+import axios from 'axios';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = 280;
@@ -13,8 +15,8 @@ const CARD_WIDTH = 280;
 export default function Training() {
   const [focusedIndex, setFocusedIndex] = useState(0);
   const scrollX = new Animated.Value(0);
-  const [selectedExercise, setSelectedExercise] = useState<TreinoExercicio | null>(null);
-  const aluno = useContext(AlunoContext);
+  const {aluno, atualizaAluno}  = useContext(AlunoContext);
+  const { exercisesDone } = useContext(TreinoContext);
 
   if (!aluno) {
     return (
@@ -24,7 +26,29 @@ export default function Training() {
     );
   }
 
-  const data = [...aluno.treinos[aluno.treinos.length - 1].exercicios, null];
+  const finalizarTreino = async () => {
+    if (aluno) {
+      try {
+        const treinoId = aluno.treinos[_index].id;     
+        const url = `https://beefit-admin.vercel.app/api/treino/${treinoId}`;
+        console.log(url);
+        const finalizado = await axios.put(url);
+        console.log(finalizado.data);
+
+      } catch (error) {
+        console.error('Erro ao atualizar treino:', error);
+      }
+    }
+  };
+
+  let _index = 0;
+  aluno.treinos.forEach((treino, index) => {
+    if(!treino.finalizado) {
+      _index = index
+    }
+  })
+
+  const data = [...aluno.treinos[_index].exercicios, null];
   const isEndCard = data[focusedIndex] === null;
 
   return (
@@ -37,37 +61,58 @@ export default function Training() {
         style={styles.listContent}
         renderItem={({ item, index }) => {
           const isFocused = index === focusedIndex;
-          setSelectedExercise(item);
 
-          return (
-            <View>
-              {item === null ? (
-                <Card isFocused={isFocused} type={'end'}>
-                  <Text className='text-white' style={{ textAlign: 'center', fontFamily: 'Roboto_400Regular', fontSize: 16 }}>
-                    Você ainda não completou todos {'\n'} os exercícios!
-                  </Text>
-                  <Button
-                    title="Voltar aos exercícios"
-                    className='bg-[#775FD1] w-[70%] px-2 py-3 mt-20'
-                    onPress={() => {
-                      router.push('./training');
-                    }}
-                  />
-                  <Button
-                    title="Finalizar"
-                    className='bg-[#4F99DD] w-[70%] px-2 py-3 mt-5'
-                    onPress={() => {
-                      router.push('/');
-                    }}
-                  />
-                </Card>
-              ) : (
-                <Card isFocused={isFocused} type={'default'}>
-                  <VideoPlayer uri={item.exercicio.gifLink} />
-                </Card>
-              )}
-            </View>
-          );
+          if (item === null && exercisesDone < aluno.treinos[_index].exercicios.length) {
+            return (
+              <Card isFocused={isFocused} type={'end'}>
+                <Text className='text-white' style={{ textAlign: 'center', fontFamily: 'Roboto_400Regular', fontSize: 16 }}>
+                  Você ainda não completou todos {'\n'} os exercícios!
+                </Text>
+                <Button
+                  title="Voltar aos exercícios"
+                  className='bg-[#775FD1] w-[70%] px-2 py-3 mt-20'
+                  onPress={() => {
+                    router.push('./training');
+                  }}
+                />
+                <Button
+                  title="Finalizar"
+                  className='bg-[#4F99DD] w-[70%] px-2 py-3 mt-5'
+                  onPress={() => {
+                    router.push('/');
+                  }}
+                />
+              </Card>
+            );
+          }
+
+          if (item === null && exercisesDone >= aluno.treinos[_index].exercicios.length) {
+            return (
+              <Card isFocused={isFocused} type={'end'}>
+                <Text className='text-white' style={{ textAlign: 'center', fontFamily: 'Roboto_400Regular', fontSize: 16 }}>
+                  Você completou todos {'\n'} os exercícios!
+                </Text>
+                <Button
+                  title="Finalizar"
+                  className='bg-[#4F99DD] w-[70%] px-2 py-3 mt-5'
+                  onPress={ async () => {
+                    finalizarTreino();
+                    await atualizaAluno();
+                    router.push('/');
+                  }}
+                />
+              </Card>
+            );
+          }
+
+          if( item !== null ) {
+            return (
+              <Card isFocused={isFocused} type={'default'}>
+                <VideoPlayer uri={item.exercicio.gifLink} />
+              </Card>
+            );
+          }
+          return null;
         }}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: (width - CARD_WIDTH) / 2 }}
