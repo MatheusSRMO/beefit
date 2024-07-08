@@ -46,8 +46,9 @@ export default function Exercises() {
         horizontal
         style={styles.listContent}
         renderItem={({ item, index }) => {
-          const isLastItem = index === data.length - 1;
-          if (item != null) exercise = item;
+          if (item != null && index === Number(exercicio)) exercise = item;
+          console.log(item?.exercicio.nome);
+          
 
           return (
             <View style={{ marginTop: 5 }}>
@@ -88,7 +89,6 @@ export default function Exercises() {
         title='Finalizar' 
         onPress={() => {
           setExercisesDone(prev => prev + 1)
-          console.log("OI")
           router.back();
         }} />
     </View>
