@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, Animated, Image } from 'react-native';
 import Button from '@/components/button';
 import Card from '@/components/card';
@@ -6,6 +6,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { AlunoContext } from '@/lib/aluno-context';
 import Loading from '../(public)/loading';
 import VideoPlayer from '@/components/video-player';
+import { TreinoContext } from '@/lib/treino-context';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = 280;
@@ -14,7 +15,9 @@ export default function Exercises() {
   const scrollX = new Animated.Value(0);
   const { exercicio } = useLocalSearchParams();
   const [focusedIndex, setFocusedIndex] = useState(Number(exercicio));
-  const aluno = React.useContext(AlunoContext);
+  const aluno = useContext(AlunoContext);
+  const { exercisesDone, setExercisesDone } = useContext(TreinoContext);
+
 
   if (!aluno) {
     return (
@@ -73,9 +76,14 @@ export default function Exercises() {
         }}
       />
 
-      <Button className='absolute bottom-7 bg-[#4F99DD] w-8/12 p-2' title='Finalizar' onPress={() => {
-        router.back();
-      }} />
+      <Button 
+        className='absolute bottom-7 bg-[#4F99DD] w-8/12 p-2' 
+        title='Finalizar' 
+        onPress={() => {
+          setExercisesDone(prev => prev + 1)
+          console.log("OI")
+          router.back();
+        }} />
     </View>
   );
 }

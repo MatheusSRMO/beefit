@@ -1,5 +1,5 @@
 import { View, Image, Animated, Text, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, ScrollView, } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { router } from "expo-router";
 import ButtonLight from "@/components/buttonLight"
 import ProfileHeader from "@/components/profileHeader";
@@ -10,6 +10,7 @@ import { onSwipePerformed } from '@/lib/utils'
 import ProgressOverview from '@/components/progressOverview';
 import TextInput from '@/components/textInput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AlunoContext } from '@/lib/aluno-context';
 
 
 
@@ -17,6 +18,8 @@ export default function Settings() {
   const [target, setTarget] = React.useState('');
   const [progress, setProgress] = React.useState('');
   const [showNumDays, setShowNumDays] = React.useState(false);
+  const aluno = useContext(AlunoContext);
+  
 
   const calculatePercentage = (progress: number, target: number): number => {
     if (target === 0) return 0;
