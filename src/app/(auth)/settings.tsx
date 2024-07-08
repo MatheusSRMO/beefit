@@ -12,7 +12,7 @@ import Loading from '@/components/loading';
 
 
 export default function Settings() {
-  const aluno = React.useContext(AlunoContext);
+  const {aluno, atualizaAluno} = React.useContext(AlunoContext);
 
   if (!aluno) {
     return (
@@ -41,11 +41,19 @@ export default function Settings() {
       <View className="flex my-10 w-full h-full justify-center items-center">
         <Button
           title="Meus rendimentos"
-          className='bg-[#4F99DD]'
+          className='bg-[#4F99DD] w-[90%]'
           onPress={() => {
             router.push('/performance')
           }}
         />
+        <Button
+          title="Atualizar"
+          className='bg-[#4F99DD] w-[90%] mt-5'
+          onPress={ async () => {
+            await atualizaAluno()
+          }}
+        />
+
         <View className="w-full justify-end items-center left-0 pt-[80%] pb-10">
           <ButtonLogin
             title='Sair'

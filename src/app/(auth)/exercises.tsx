@@ -15,7 +15,7 @@ export default function Exercises() {
   const scrollX = new Animated.Value(0);
   const { exercicio } = useLocalSearchParams();
   const [focusedIndex, setFocusedIndex] = useState(Number(exercicio));
-  const aluno = useContext(AlunoContext);
+  const {aluno} = useContext(AlunoContext);
   const { exercisesDone, setExercisesDone } = useContext(TreinoContext);
 
 
@@ -27,7 +27,14 @@ export default function Exercises() {
     );
   }
 
-  const data = [...aluno.treinos[aluno.treinos.length - 1].exercicios, null];
+  let _index = 0;
+  aluno.treinos.forEach((treino, index) => {
+    if(!treino.finalizado) {
+      _index = index
+    }
+  })
+
+  const data = [...aluno.treinos[_index].exercicios, null];
   let exercise: any = null;
 
   return (

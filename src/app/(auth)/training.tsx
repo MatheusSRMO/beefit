@@ -15,7 +15,7 @@ const CARD_WIDTH = 280;
 export default function Training() {
   const [focusedIndex, setFocusedIndex] = useState(0);
   const scrollX = new Animated.Value(0);
-  const aluno  = useContext(AlunoContext);
+  const {aluno, atualizaAluno}  = useContext(AlunoContext);
   const { exercisesDone } = useContext(TreinoContext);
 
   if (!aluno) {
@@ -29,7 +29,7 @@ export default function Training() {
   const finalizarTreino = async () => {
     if (aluno) {
       try {
-        const treinoId = aluno.treinos[aluno.treinos.length - 1].id;     
+        const treinoId = aluno.treinos[_index].id;     
         const url = `https://beefit-admin.vercel.app/api/treino/${treinoId}`;
         console.log(url);
         const finalizado = await axios.put(url);
@@ -41,8 +41,14 @@ export default function Training() {
     }
   };
 
+  let _index = 0;
+  aluno.treinos.forEach((treino, index) => {
+    if(!treino.finalizado) {
+      _index = index
+    }
+  })
 
-  const data = [...aluno.treinos[aluno.treinos.length - 1].exercicios, null];
+  const data = [...aluno.treinos[_index].exercicios, null];
   const isEndCard = data[focusedIndex] === null;
 
   return (
@@ -56,7 +62,7 @@ export default function Training() {
         renderItem={({ item, index }) => {
           const isFocused = index === focusedIndex;
 
-          if (item === null && exercisesDone < aluno.treinos[aluno.treinos.length - 1].exercicios.length) {
+          if (item === null && exercisesDone < aluno.treinos[_index].exercicios.length) {
             return (
               <Card isFocused={isFocused} type={'end'}>
                 <Text className='text-white' style={{ textAlign: 'center', fontFamily: 'Roboto_400Regular', fontSize: 16 }}>
@@ -80,7 +86,7 @@ export default function Training() {
             );
           }
 
-          if (item === null && exercisesDone >= aluno.treinos[aluno.treinos.length - 1].exercicios.length) {
+          if (item === null && exercisesDone >= aluno.treinos[_index].exercicios.length) {
             return (
               <Card isFocused={isFocused} type={'end'}>
                 <Text className='text-white' style={{ textAlign: 'center', fontFamily: 'Roboto_400Regular', fontSize: 16 }}>
@@ -89,8 +95,9 @@ export default function Training() {
                 <Button
                   title="Finalizar"
                   className='bg-[#4F99DD] w-[70%] px-2 py-3 mt-5'
-                  onPress={() => {
+                  onPress={ async () => {
                     finalizarTreino();
+                    await atualizaAluno();
                     router.push('/');
                   }}
                 />
