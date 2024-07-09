@@ -18,7 +18,8 @@ export default function Performance() {
   const [target, setTarget] = React.useState('');
   const [progress, setProgress] = React.useState(0);
   const [showNumDays, setShowNumDays] = React.useState(false);
-  const {aluno} = useContext(AlunoContext);
+  const { aluno } = useContext(AlunoContext);
+
 
   useEffect(() => {
     if (aluno) {

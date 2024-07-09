@@ -11,9 +11,12 @@ const AlunoContext = createContext<{aluno: Aluno | null, atualizaAluno: () => vo
 const AlunoProvider = ({ children }: { children: React.ReactNode }) => {
   const { userId, isLoaded, isSignedIn } = useAuth();
   const [aluno, setAluno] = useState<Aluno | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const atualizaAluno = async () => {
     if (!isLoaded) return;
+
+    setAluno(null);
 
     const url = `https://beefit-admin.vercel.app/api/aluno/${userId}`;
     console.log(url)
