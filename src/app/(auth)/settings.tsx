@@ -17,7 +17,6 @@ export default function Settings() {
   if (!aluno) {
     return (
       <View className='flex-1 w-full h-full flex justify-center items-center'>
-        {/* TODO: @gbs adiciona aqui o componente de loading */}
         <Loading />
       </View>
     );

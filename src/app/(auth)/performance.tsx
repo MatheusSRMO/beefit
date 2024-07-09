@@ -27,7 +27,7 @@ export default function Performance() {
     }
   }, [aluno]);
 
-  console.log(progress);
+  // console.log(progress);
 
   const calculatePercentage = (progress: number, target: number): number => {
     if (target === 0) return 0;

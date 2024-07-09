@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import Calendar from '@/components/calendar';
-import { View, Image, Text } from 'react-native';
+import { View, Image, Text, ScrollView, RefreshControl } from 'react-native';
 import { AlunoContext } from '@/lib/aluno-context';
 import ButtonLight from '@/components/buttonLight';
 import ProfileHeader from '@/components/profileHeader';
@@ -16,6 +16,7 @@ export default function Main() {
   const [progress, setProgress] = React.useState(0);
   const [target, setTarget] = React.useState<number>(0);
   const {aluno, atualizaAluno} = React.useContext(AlunoContext);
+  const [refreshing, setRefreshing] = React.useState(false);
 
   useEffect(() => {
     if (aluno) {
@@ -23,6 +24,16 @@ export default function Main() {
       setProgress(treinosFinalizados);
     }
   }, [aluno]);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await atualizaAluno();
+    } catch (error) {
+      console.error(error);
+    }
+    setRefreshing(false);
+  }, []);
 
   React.useEffect(() => {
     (
@@ -48,6 +59,17 @@ export default function Main() {
   }
 
   return (
+  <ScrollView 
+    contentContainerStyle={{
+      width: '100%',
+      height: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}
+    refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }
+    >
     <View className='w-full h-full flex items-center justify-center'>
       <View className="flex flex-row items-center justify-center w-full px-5 pt-10">
         <ProfileHeader firstName={aluno.firstName} lastName={aluno.lastName} url={aluno.url!} />
@@ -90,7 +112,7 @@ export default function Main() {
           title="Treino"
           className='bg-[#90CAFF] w-full'
           onPress={ async () => {
-            await atualizaAluno()
+            // await atualizaAluno()
             aluno.treinos.forEach((treino) => {
               if(!treino.finalizado) {
                 router.push('./training');
@@ -100,5 +122,6 @@ export default function Main() {
         />
       </View>
     </View>
+  </ScrollView>
   );
 }
