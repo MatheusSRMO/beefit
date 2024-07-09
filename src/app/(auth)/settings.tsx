@@ -17,15 +17,14 @@ export default function Settings() {
   if (!aluno) {
     return (
       <View className='flex-1 w-full h-full flex justify-center items-center'>
-        {/* TODO: @gbs adiciona aqui o componente de loading */}
         <Loading />
       </View>
     );
   }
 
   return (
-    <View className='w-full h-full flex items-center relative'>
-      <View className="flex flex-row items-center justify-center w-full px-5">
+    <View className='w-full h-full flex items-center'>
+      <View className="flex flex-row items-center justify-center w-full px-5 pt-10">
         <ProfileHeader firstName={aluno.firstName} lastName={aluno.lastName} url={aluno.url!} />
 
         <Icon
@@ -38,7 +37,7 @@ export default function Settings() {
           }} />
       </View>
 
-      <View className="flex my-10 w-full h-full justify-center items-center">
+      <View className="flex w-full h-full items-center mt-20">
         <Button
           title="Meus rendimentos"
           className='bg-[#4F99DD] w-[90%]'
@@ -54,7 +53,7 @@ export default function Settings() {
           }}
         />
 
-        <View className="w-full justify-end items-center left-0 pt-[80%] pb-10">
+        <View className="w-full justify-end items-center left-0 mb-10 mt-[90%]">
           <ButtonLogin
             title='Sair'
             className='bg-[#90CAFF] w-4/12 rounded-full py-2'

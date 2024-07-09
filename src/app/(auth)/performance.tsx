@@ -20,6 +20,7 @@ export default function Performance() {
   const [showNumDays, setShowNumDays] = React.useState(false);
   const { aluno } = useContext(AlunoContext);
 
+
   useEffect(() => {
     if (aluno) {
       const treinosFinalizados = aluno.treinos.filter(treino => treino.finalizado === true).length;
@@ -27,7 +28,7 @@ export default function Performance() {
     }
   }, [aluno]);
 
-  console.log(progress);
+  // console.log(progress);
 
   const calculatePercentage = (progress: number, target: number): number => {
     if (target === 0) return 0;
