@@ -45,13 +45,13 @@ export default function Settings() {
             router.push('/performance')
           }}
         />
-        <Button
+        {/* <Button
           title="Atualizar"
           className='bg-[#4F99DD] w-[90%] mt-5'
           onPress={ async () => {
             await atualizaAluno()
           }}
-        />
+        /> */}
 
         <View className="w-full justify-end items-center left-0 mb-10 mt-[90%]">
           <ButtonLogin
